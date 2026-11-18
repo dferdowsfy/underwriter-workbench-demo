@@ -240,6 +240,72 @@ footer b{color:#fff;font-weight:600}
 .toast{position:fixed;left:50%;bottom:64px;transform:translate(-50%,16px);opacity:0;background:var(--navy);color:#fff;border-radius:8px;padding:9px 16px;font-size:.93rem;z-index:50;transition:all .3s;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
+/* ---------- business impact simulator ---------- */
+.hbtn[aria-current="page"]{background:rgba(255,255,255,.1);color:#fff}
+.bz-back{display:inline-block;font-size:.96rem;margin-bottom:6px;text-decoration:none}
+.bz-back:hover{text-decoration:underline}
+.biz .casebar h2{margin-top:2px}
+.biz-tag{background:var(--amber-t);color:#7A5200;box-shadow:inset 0 0 0 1px var(--gold);align-self:flex-end}
+.biz-tag::before{background:var(--gold)}
+.bz-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:clamp(20px,2.4vw,40px);padding:clamp(14px,1.6vw,22px) 0;align-items:start}
+.bz-h{margin:0 0 4px;font-size:.86rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
+.bz-note{font-size:.9rem;color:var(--muted);margin:0 0 10px}
+.bz-in{padding:9px 0;border-bottom:1px solid #EEF1F5;min-width:0}
+.bz-in label{display:block;font-size:.96rem;font-weight:600;color:var(--ink);margin-bottom:4px}
+.bz-in .hint{font-weight:400;color:var(--muted);font-size:.86rem}
+.bz-ctl{display:flex;align-items:center;gap:12px;min-width:0}
+.bz-ctl input[type=range]{flex:1 1 auto;min-width:0;accent-color:var(--blue);height:26px;margin:0}
+.bz-num{display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:.93rem;color:var(--muted)}
+.bz-num input{width:7.6em;border:1px solid #C3CDD9;border-radius:6px;padding:5px 8px;font:inherit;font-size:1rem;color:var(--ink);background:#fff;text-align:right;font-variant-numeric:tabular-nums}
+.bz-num input:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,114,188,.15)}
+.bz-num.sm input{width:6.2em}
+.bz-reset{margin-top:14px;background:#fff;border:1px solid var(--blue);color:var(--blue-d);border-radius:8px;padding:8px 16px;font-weight:700;font-size:1rem}
+.bz-reset:hover{background:var(--tint)}
+.bz-out{min-width:0;border-left:1px solid var(--line);padding-left:clamp(18px,2vw,28px)}
+.bz-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.bz-kpi{background:var(--soft);border-radius:8px;padding:12px 14px;min-width:0}
+.bz-kpi.hero{background:var(--tint);box-shadow:inset 3px 0 0 var(--blue)}
+.bz-kpi .l{font-size:.79rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.bz-kpi .v{font-family:var(--serif);font-size:clamp(1.6rem,1.2rem + .9vw,2.15rem);line-height:1.15;color:var(--ink);margin-top:4px;overflow-wrap:anywhere}
+.bz-kpi.hero .v{color:var(--blue-d)}
+.bz-kpi .v small{font-family:var(--sans);font-size:.93rem;font-weight:600;color:var(--muted);margin-left:4px}
+.bz-kpi .s{font-size:.86rem;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.bz-sec{margin-top:16px}
+.bz-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 14px;padding:8px 0;border-bottom:1px solid #EEF1F5;align-items:baseline}
+.bz-r .k{color:var(--text);font-size:.96rem;min-width:0}
+.bz-r .k small{display:block;color:var(--muted);font-size:.86rem}
+.bz-r .v{font-weight:700;color:var(--ink);font-size:1.07rem;text-align:right;font-variant-numeric:tabular-nums}
+.bz-r .v small{display:block;font-weight:500;color:var(--muted);font-size:.82rem}
+.bz-cmp{margin-top:16px}
+.bz-bar{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;margin-top:10px}
+.bz-bar .bl{font-size:.93rem;color:var(--ink);font-weight:600}
+.bz-bar .bt{display:flex;align-items:center;gap:10px}
+.bz-bar .trk{flex:1 1 auto;height:20px;background:#E9EDF3;border-radius:4px;overflow:hidden;min-width:0}
+.bz-bar .bf{height:100%;border-radius:4px;transition:width .25s ease}
+.bz-bar .bf.cur{background:#5B6B84}
+.bz-bar .bf.agt{background:var(--blue)}
+.bz-bar .bv{flex:0 0 auto;min-width:5.6em;text-align:right;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;font-size:.96rem}
+.bz-bar+.bz-cap,.bz-cap{font-size:.9rem;color:var(--muted);margin:8px 0 0}
+.bz-tbl{padding:clamp(6px,1vw,12px) 0 4px;border-top:1px solid var(--line)}
+table.bz{width:100%;border-collapse:collapse;font-size:.96rem;max-width:44rem}
+table.bz th{text-align:left;font-size:.79rem;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line)}
+table.bz td{padding:7px 8px;border-bottom:1px solid #EEF1F5;color:var(--ink)}
+table.bz th:not(:first-child),table.bz td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.bz tfoot td{font-weight:700;background:var(--soft);border-bottom:0}
+.bz-div{display:none;font-size:.9rem;color:#7A5200;background:var(--amber-t);border-radius:4px;box-shadow:inset 3px 0 0 var(--gold);padding:6px 10px;margin-top:8px;max-width:44rem}
+.bz-div.on{display:block}
+.bz-disc{font-size:.9rem;color:var(--muted);margin:14px 0 clamp(16px,2vw,28px);padding-top:10px;border-top:1px solid var(--line);max-width:60rem}
+@media (max-width:1099px){
+  .bz-grid{grid-template-columns:minmax(0,1fr)}
+  .bz-out{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:clamp(14px,2vw,20px)}
+}
+@media (max-width:480px){
+  .bz-ctl{flex-wrap:wrap;gap:4px 12px}
+  .bz-ctl input[type=range]{flex:1 1 100%}
+  .bz-num{margin-left:auto}
+  .bz-kpis{grid-template-columns:minmax(0,1fr)}
+}
+
 /* ---------- responsive ---------- */
 @media (min-width:1100px) and (max-height:760px){.casebar{padding:12px 0 10px}.work{padding:14px 0 10px}}
 @media (max-width:1099px){
@@ -247,8 +313,9 @@ footer b{color:#fff;font-weight:600}
   .side{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:clamp(14px,2vw,20px)}
 }
 @media (max-width:1099px){ .agents .lbl{flex-basis:100%} }
+@media (max-width:1279px){ #btnBiz .t2{display:none} #btnBiz .t3{display:inline} }
 @media (max-width:1179px){ .hbtn .t2{display:none} .hbtn .t3{display:inline} }
-@media (max-width:879px){ .proto,.hdiv{display:none} }
+@media (max-width:959px){ .proto,.hdiv{display:none} }
 @media (max-width:699px){
   .proto,.hdiv{display:none}
   .hsep{display:none}
@@ -287,6 +354,7 @@ footer b{color:#fff;font-weight:600}
   <nav class="nav" aria-label="Workbench">
    <button class="hbtn" id="btnCases" aria-expanded="false" aria-controls="popCases" aria-label="Cases (4)" title="Cases (4)"><span class="ico"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M2 6.5h12"/></svg></span><span class="t">Cases</span> <span class="n">4</span></button>
    <button class="hbtn" id="btnImpact" aria-expanded="false" aria-controls="popImpact" aria-label="Illustrative impact" title="Illustrative impact"><span class="ico"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 13.5h11"/><path d="M4.5 11V8M8 11V5M11.5 11V3"/></svg></span><span class="t"><span class="t2">Illustrative impact</span><span class="t3">Impact</span></span></button>
+   <button class="hbtn" id="btnBiz" aria-label="Business Impact" title="Business Impact simulator"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13.5h12"/><path d="M2.5 10l3.5-3.5 2.5 2.5 5-5.5"/><path d="M10.5 3.5h3v3"/></svg><span class="t"><span class="t2">Business Impact</span><span class="t3">Business</span></span></button>
    <button class="hbtn outline" id="btnActivity" aria-expanded="false" aria-controls="drawer" aria-label="Activity &amp; controls"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5.5 4h8M5.5 8h8M5.5 12h8"/><circle cx="2.5" cy="4" r=".9" fill="currentColor"/><circle cx="2.5" cy="8" r=".9" fill="currentColor"/><circle cx="2.5" cy="12" r=".9" fill="currentColor"/></svg><span class="t">Activity<span class="t2"> &amp; controls</span></span></button>
    <span class="hsep"></span>
    <button class="hbtn cta" id="btnReplay" aria-label="Start workflow" title="Run the agents on this new submission"><span aria-hidden="true" id="rIco">▶</span><span class="t"><span id="rWord">Start</span><span class="t2"> workflow</span></span></button>
@@ -361,6 +429,61 @@ footer b{color:#fff;font-weight:600}
     </div>
     <aside class="side" id="side" aria-live="polite"></aside>
   </section>
+</main>
+
+<main class="canvas biz is-hidden" id="bizView" aria-labelledby="bizTitle">
+  <section class="casebar">
+    <div class="t">
+      <a class="link bz-back" id="bizBack" href="#workbench">← Back to workbench</a>
+      <h2 id="bizTitle">Business Impact Simulator</h2>
+      <div class="meta">Model the potential productivity and economic value of agentic underwriting.</div>
+    </div>
+    <span class="status biz-tag">Illustrative Scenario</span>
+  </section>
+  <section class="bz-grid">
+    <div class="bz-assume">
+      <h3 class="bz-h">Assumptions</h3>
+      <p class="bz-note">Illustrative scenario assumptions, not measured results. Drag a slider or type a value.</p>
+      <div class="bz-in"><label for="s_subs">Annual submissions</label><div class="bz-ctl"><input type="range" id="s_subs" min="10000" max="500000" step="5000"><span class="bz-num"><input type="number" id="n_subs" min="10000" max="500000" step="any" inputmode="decimal" aria-label="Annual submissions, type a value"></span></div></div>
+      <div class="bz-in"><label for="s_min">Average manual administrative time <span class="hint">(minutes per submission)</span></label><div class="bz-ctl"><input type="range" id="s_min" min="5" max="120" step="1"><span class="bz-num"><input type="number" id="n_min" min="5" max="120" step="any" inputmode="decimal" aria-label="Average manual administrative time, type a value"> min</span></div></div>
+      <div class="bz-in"><label for="s_red">Reduction in manual effort</label><div class="bz-ctl"><input type="range" id="s_red" min="0" max="95" step="1"><span class="bz-num"><input type="number" id="n_red" min="0" max="95" step="any" inputmode="decimal" aria-label="Reduction in manual effort, type a value">%</span></div></div>
+      <div class="bz-in"><label for="s_rate">Fully loaded hourly labor cost</label><div class="bz-ctl"><input type="range" id="s_rate" min="25" max="200" step="1"><span class="bz-num">$<input type="number" id="n_rate" min="25" max="200" step="any" inputmode="decimal" aria-label="Fully loaded hourly labor cost, type a value"> /hr</span></div></div>
+      <div class="bz-in"><label for="s_tin">Input tokens per submission</label><div class="bz-ctl"><input type="range" id="s_tin" min="1000" max="200000" step="1000"><span class="bz-num"><input type="number" id="n_tin" min="1000" max="200000" step="any" inputmode="decimal" aria-label="Input tokens per submission, type a value"></span></div></div>
+      <div class="bz-in"><label for="s_tout">Output tokens per submission</label><div class="bz-ctl"><input type="range" id="s_tout" min="500" max="50000" step="500"><span class="bz-num"><input type="number" id="n_tout" min="500" max="50000" step="any" inputmode="decimal" aria-label="Output tokens per submission, type a value"></span></div></div>
+      <div class="bz-in"><label for="n_pin">Input token price <span class="hint">(editable)</span></label><div class="bz-ctl"><span class="bz-num sm">$<input type="number" id="n_pin" min="0" max="1000" step="any" inputmode="decimal"> per 1M tokens</span></div></div>
+      <div class="bz-in"><label for="n_pout">Output token price <span class="hint">(editable)</span></label><div class="bz-ctl"><span class="bz-num sm">$<input type="number" id="n_pout" min="0" max="1000" step="any" inputmode="decimal"> per 1M tokens</span></div></div>
+      <button class="bz-reset" id="bzReset" type="button">Reset to Base Case</button>
+    </div>
+    <div class="bz-out" aria-live="polite">
+      <h3 class="bz-h">Illustrative results</h3>
+      <div class="bz-kpis">
+        <div class="bz-kpi hero"><div class="l">Annual Capacity Value</div><div class="v" id="kCap"></div><div class="s" id="kCapS"></div></div>
+        <div class="bz-kpi"><div class="l">Hours Recovered Annually</div><div class="v" id="kHrs"></div><div class="s">Submissions × minutes saved ÷ 60</div></div>
+        <div class="bz-kpi"><div class="l">Time Saved per Submission</div><div class="v" id="kSav"></div><div class="s">Manual minutes × reduction</div></div>
+        <div class="bz-kpi"><div class="l">Annual AI Token Cost</div><div class="v" id="kTok"></div><div class="s">Modeled usage only</div></div>
+      </div>
+      <div class="bz-sec">
+        <div class="bz-r"><span class="k">Estimated AI token cost per submission</span><span class="v" id="rTps"></span></div>
+        <div class="bz-r"><span class="k">Remaining human administrative time per submission</span><span class="v" id="rRem"></span></div>
+        <div class="bz-r"><span class="k">Capacity value less modeled AI token cost<small>Not cash savings</small></span><span class="v" id="rNet"></span></div>
+      </div>
+      <div class="bz-cmp" role="group" aria-labelledby="bzCmpH">
+        <h3 class="bz-h" id="bzCmpH">Human processing time per submission</h3>
+        <div class="bz-bar"><div class="bl">Current (manual)</div><div class="bt"><div class="trk"><div class="bf cur" id="barCur"></div></div><span class="bv" id="barCurV"></span></div></div>
+        <div class="bz-bar"><div class="bl">Agent-assisted (human review)</div><div class="bt"><div class="trk"><div class="bf agt" id="barAgt"></div></div><span class="bv" id="barAgtV"></span></div></div>
+        <p class="bz-cap" id="barCap"></p>
+      </div>
+    </div>
+  </section>
+  <section class="bz-tbl">
+    <h3 class="bz-h">Workflow savings breakdown · illustrative base case</h3>
+    <div class="tw"><table class="bz"><thead><tr><th>Activity</th><th>Manual</th><th>Agent-assisted</th></tr></thead>
+      <tbody><tr><td>Document extraction</td><td>10 min</td><td>2 min</td></tr><tr><td>Completeness checks</td><td>8 min</td><td>2 min</td></tr><tr><td>Risk appetite checks</td><td>7 min</td><td>2 min</td></tr><tr><td>Review preparation</td><td>5 min</td><td>1.5 min</td></tr></tbody>
+      <tfoot><tr><td>Total (illustrative base case)</td><td>30 min</td><td>7.5 min</td></tr></tfoot></table></div>
+    <p class="bz-cap">Illustrative values. Actual performance must be validated through a pilot.</p>
+    <div class="bz-div" id="bzDiv">This table is the static base case. The sliders above currently differ from it.</div>
+  </section>
+  <p class="bz-disc">Illustrative productivity model. Capacity value is not guaranteed cash savings. Excludes implementation, infrastructure, integration, human oversight, and ongoing operational costs.</p>
 </main>
 
 <div class="scrim" id="scrim"></div>
@@ -685,7 +808,7 @@ $("#btnImpact").onclick=e=>{e.stopPropagation();togglePop($("#btnImpact"),$("#po
 document.addEventListener("click",e=>{if(!e.target.closest(".pop")&&!e.target.closest("#btnCases")&&!e.target.closest("#btnImpact"))closePops();});
 /* live resize: keep any open popover anchored to its header button and inside the viewport */
 let rzT;addEventListener("resize",()=>{cancelAnimationFrame(rzT);rzT=requestAnimationFrame(()=>{if(OPEN)placePop(OPEN.btn,OPEN.pop);});});
-function startOrReplay(){if(S.stage==="run"&&!RAN)return;scrollTo({top:0,behavior:"smooth"});if(RAN||S.stage!=="idle")replay();else run();}
+function startOrReplay(){if(VIEW==="impact")goView("workbench");if(S.stage==="run"&&!RAN)return;scrollTo({top:0,behavior:"smooth"});if(RAN||S.stage!=="idle")replay();else run();}
 $("#btnReplay").onclick=startOrReplay;$("#btnStart").onclick=startOrReplay;
 $$(".dt").forEach(b=>b.onclick=()=>{$$(".dt").forEach(x=>x.classList.toggle("on",x===b));$$(".dp").forEach(p=>p.classList.toggle("on",p.id==="dp-"+b.dataset.t));});
 $("#btnExport").onclick=exportJSON;
@@ -694,6 +817,70 @@ $("#btnExport").onclick=exportJSON;
 function fitReq(){const t=$("#reqText");t.style.height="auto";t.style.height=(t.scrollHeight+2)+"px";}
 $("#reqText").addEventListener("input",fitReq);addEventListener("resize",()=>requestAnimationFrame(fitReq));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){openDrawer(false);closePops();}});
+
+/* -------- business impact simulator (separate view; reads and writes none of the workbench state) -------- */
+const BZ={subs:100000,min:30,red:75,rate:60,tin:25000,tout:4500,pin:0.05,pout:0.25};
+const BZR={subs:[10000,500000],min:[5,120],red:[0,95],rate:[25,200],tin:[1000,200000],tout:[500,50000],pin:[0,1000],pout:[0,1000]};
+let bz={...BZ};
+const bzTrim=(v,d)=>{let t=v.toFixed(d);if(t.indexOf(".")>=0)t=t.replace(/0+$/,"").replace(/\.$/,"");return t;};
+const bzExact=v=>(v<0?"-":"")+"$"+Math.abs(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+function bzMoney(v){const a=Math.abs(v),n=v<0?"-":"";
+  if(a>=1e9)return n+"$"+bzTrim(a/1e9,2)+"B";if(a>=1e6)return n+"$"+bzTrim(a/1e6,2)+"M";if(a>=1e3)return n+"$"+bzTrim(a/1e3,2)+"K";return bzExact(v);}
+function bzSmall(v){if(!(v>0))return "$0.00";const d=v>=0.01?4:6;let t=v.toFixed(d);t=t.replace(/0+$/,"");const m=v>=1?2:4;const dp=(t.split(".")[1]||"").length;if(dp<m)t=Number(t).toFixed(m);return "$"+t;}
+const bzMin=v=>bzTrim(v,2);
+const bzNum=v=>v.toLocaleString("en-US",{maximumFractionDigits:1});
+function bzCalc(x){
+  const saved=x.min*(x.red/100),hours=x.subs*saved/60,cap=hours*x.rate;
+  const tps=x.tin/1e6*x.pin+x.tout/1e6*x.pout,tok=tps*x.subs;
+  return {saved,hours,cap,tps,tok,rem:x.min-saved,net:cap-tok};
+}
+function bzRender(){
+  const r=bzCalc(bz);
+  $("#kCap").textContent=bzMoney(r.cap);$("#kCapS").textContent=bzExact(r.cap)+" exact · not cash savings";
+  $("#kHrs").textContent=bzNum(r.hours);
+  $("#kSav").innerHTML=bzMin(r.saved)+"<small>minutes</small>";
+  $("#kTok").textContent=bzMoney(r.tok);
+  $("#rTps").innerHTML=bzSmall(r.tps)+"<small>≈ "+bzTrim(r.tps*100,2)+"¢ per submission</small>";
+  $("#rRem").textContent=bzMin(r.rem)+" min";
+  $("#rNet").innerHTML=bzMoney(r.net)+"<small>"+bzExact(r.net)+" exact</small>";
+  const m=bz.min>0?bz.min:1;
+  $("#barCur").style.width="100%";$("#barAgt").style.width=Math.max(0,Math.min(100,r.rem/m*100))+"%";
+  $("#barCurV").textContent=bzMin(bz.min)+" min";$("#barAgtV").textContent=bzMin(r.rem)+" min";
+  $("#barCap").textContent=bzMin(r.saved)+" min saved per submission ("+bzTrim(bz.red,1)+"% reduction). Bars are relative to the current manual time.";
+  $("#bzDiv").classList.toggle("on",bz.min!==30||bz.red!==75);
+}
+const bzClamp=(k,v)=>Math.min(BZR[k][1],Math.max(BZR[k][0],v));
+function bzSet(k,v,fromNum){
+  v=bzClamp(k,v);bz[k]=v;
+  const sl=$("#s_"+k);if(sl)sl.value=v;
+  const nu=$("#n_"+k);if(nu&&!fromNum)nu.value=v;
+  bzRender();
+}
+function bzInit(){
+  Object.keys(BZ).forEach(k=>{
+    const sl=$("#s_"+k),nu=$("#n_"+k);nu.value=BZ[k];if(sl)sl.value=BZ[k];
+    if(sl)sl.addEventListener("input",()=>bzSet(k,parseFloat(sl.value)));
+    nu.addEventListener("input",()=>{const v=parseFloat(nu.value);if(isFinite(v))bzSet(k,v,true);});
+    nu.addEventListener("change",()=>{const v=parseFloat(nu.value);bzSet(k,isFinite(v)?v:bz[k]);});
+  });
+  $("#bzReset").onclick=()=>{bz={...BZ};Object.keys(BZ).forEach(k=>bzSet(k,BZ[k]));};
+  bzRender();
+}
+/* view switch: toggles visibility only; the workbench DOM and its run/approval/audit state are left untouched */
+let VIEW="workbench",wbY=0;
+function setView(v){
+  if(v===VIEW)return;
+  if(v==="impact"){wbY=window.scrollY;closePops();openDrawer(false);}
+  VIEW=v;const im=v==="impact";
+  $("#canvas").classList.toggle("is-hidden",im);$("#bizView").classList.toggle("is-hidden",!im);
+  if(im)$("#btnBiz").setAttribute("aria-current","page");else $("#btnBiz").removeAttribute("aria-current");
+  if(im)scrollTo(0,0);else requestAnimationFrame(()=>{fitReq();scrollTo(0,wbY);});
+}
+function goView(v){const h=v==="impact"?"#impact":"#workbench";if(location.hash!==h)history.pushState(null,"",h);setView(v);}
+$("#btnBiz").onclick=()=>goView(VIEW==="impact"?"workbench":"impact");
+$("#bizBack").onclick=e=>{e.preventDefault();goView("workbench");};
+addEventListener("hashchange",()=>setView(location.hash==="#impact"?"impact":"workbench"));
+bzInit();if(location.hash==="#impact")setView("impact");
 reset();
 window.__demo={get state(){return S;},reset,replay,start:startOrReplay};
 })();
