@@ -261,6 +261,18 @@ footer b{color:#fff;font-weight:600}
 .bz-num.sm input{width:6.2em}
 .bz-reset{margin-top:14px;background:#fff;border:1px solid var(--blue);color:var(--blue-d);border-radius:8px;padding:8px 16px;font-weight:700;font-size:1rem}
 .bz-reset:hover{background:var(--tint)}
+.bz-pre-lab{display:block;font-size:.96rem;font-weight:600;color:var(--ink);margin-bottom:6px}
+.bz-pre-row{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.bz-pre-row+.bz-pre-row{margin-top:8px}
+.bz-pre-row[hidden]{display:none}
+.bz-pill{background:#fff;border:1px solid var(--blue);color:var(--blue-d);border-radius:999px;padding:6px 14px;font-size:.93rem;font-weight:700;min-height:34px;line-height:1.2;cursor:pointer}
+.bz-pill:hover{background:var(--tint)}
+.bz-pill:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(0,114,188,.25)}
+.bz-pill.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+.bz-pill.prov.sel{background:var(--navy);border-color:var(--navy)}
+.bz-pre-info{font-size:.86rem;color:var(--text);margin:8px 0 0;min-height:0}
+.bz-pre-info[hidden]{display:none}
+.bz-pre-cap{font-size:.86rem;color:var(--muted);margin:8px 0 0}
 .bz-out{min-width:0;border-left:1px solid var(--line);padding-left:clamp(18px,2vw,28px)}
 .bz-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .bz-kpi{background:var(--soft);border-radius:8px;padding:12px 14px;min-width:0}
@@ -450,6 +462,13 @@ table.bz tfoot td{font-weight:700;background:var(--soft);border-bottom:0}
       <div class="bz-in"><label for="s_rate">Fully loaded hourly labor cost</label><div class="bz-ctl"><input type="range" id="s_rate" min="25" max="200" step="1"><span class="bz-num">$<input type="number" id="n_rate" min="25" max="200" step="any" inputmode="decimal" aria-label="Fully loaded hourly labor cost, type a value"> /hr</span></div></div>
       <div class="bz-in"><label for="s_tin">Input tokens per submission</label><div class="bz-ctl"><input type="range" id="s_tin" min="1000" max="200000" step="1000"><span class="bz-num"><input type="number" id="n_tin" min="1000" max="200000" step="any" inputmode="decimal" aria-label="Input tokens per submission, type a value"></span></div></div>
       <div class="bz-in"><label for="s_tout">Output tokens per submission</label><div class="bz-ctl"><input type="range" id="s_tout" min="500" max="50000" step="500"><span class="bz-num"><input type="number" id="n_tout" min="500" max="50000" step="any" inputmode="decimal" aria-label="Output tokens per submission, type a value"></span></div></div>
+      <div class="bz-in" id="bzPre">
+        <span class="bz-pre-lab" id="bzPreLab">Token price preset</span>
+        <div class="bz-pre-row" id="bzProv" role="group" aria-labelledby="bzPreLab"></div>
+        <div class="bz-pre-row" id="bzMods" role="group" aria-label="Model" hidden></div>
+        <p class="bz-pre-info" id="bzPreInfo" hidden></p>
+        <p class="bz-pre-cap">List API prices as of Nov 18, 2026 (standard, non-batch). Verify before use.</p>
+      </div>
       <div class="bz-in"><label for="n_pin">Input token price <span class="hint">(editable)</span></label><div class="bz-ctl"><span class="bz-num sm">$<input type="number" id="n_pin" min="0" max="1000" step="any" inputmode="decimal"> per 1M tokens</span></div></div>
       <div class="bz-in"><label for="n_pout">Output token price <span class="hint">(editable)</span></label><div class="bz-ctl"><span class="bz-num sm">$<input type="number" id="n_pout" min="0" max="1000" step="any" inputmode="decimal"> per 1M tokens</span></div></div>
       <button class="bz-reset" id="bzReset" type="button">Reset to Base Case</button>
@@ -856,6 +875,52 @@ function bzSet(k,v,fromNum){
   const nu=$("#n_"+k);if(nu&&!fromNum)nu.value=v;
   bzRender();
 }
+/* token price presets: list API prices per 1M tokens, standard non-batch, checked against each provider's official pricing page on Nov 18, 2026 */
+const BZP={
+  anthropic:{label:"Anthropic",src:"platform.claude.com/docs/en/about-claude/pricing",models:[
+    {id:"haiku",btn:"Haiku 5.5",name:"Claude Haiku 5.5",pin:0.10,pout:0.50,note:"Rate for prompts up to 100K tokens; above that it is $0.50 in / $2.50 out."},
+    {id:"sonnet",btn:"Sonnet 5.5",name:"Claude Sonnet 5.5",pin:2,pout:10},
+    {id:"opus",btn:"Opus 5.5",name:"Claude Opus 5.5",pin:4,pout:20}]},
+  openai:{label:"OpenAI",src:"platform.openai.com/docs/pricing",models:[
+    {id:"luna",btn:"GPT-6 Luna",name:"GPT-6 Luna",pin:0.10,pout:0.50,note:"Short-context standard rate."},
+    {id:"sol",btn:"GPT-6.2 Sol",name:"GPT-6.2 Sol",pin:2,pout:10,note:"Short-context standard rate."},
+    {id:"astra",btn:"GPT-6.2 Astra",name:"GPT-6.2 Astra",pin:8,pout:40,note:"Short-context standard rate."}]},
+  google:{label:"Google",src:"ai.google.dev/gemini-api/docs/pricing",models:[
+    {id:"lite",btn:"3.5 Flash-Lite",name:"Gemini 3.5 Flash-Lite",pin:0.30,pout:2.50},
+    {id:"flash",btn:"3.8 Flash",name:"Gemini 3.8 Flash",pin:0.75,pout:3.75,note:"Rate through Dec 31, 2026; $1.50 in / $7.50 out from Jan 1, 2027."},
+    {id:"pro",btn:"3.1 Pro (Preview)",name:"Gemini 3.1 Pro Preview",pin:2,pout:12,note:"Rate for prompts up to 200K tokens; above that it is $4 in / $18 out."},
+    {id:"g4",btn:"4 Carbon",name:"Gemini 4 Carbon",pin:2,pout:10,note:"Rate through Nov 30, 2026; $4 in / $20 out from Dec 1, 2026."}]}
+};
+let bzP={prov:"custom",model:null};
+const bzUsd=v=>"$"+v.toFixed(2);
+function bzPaint(){
+  const prov=$("#bzProv"),mods=$("#bzMods"),info=$("#bzPreInfo");
+  prov.querySelectorAll(".bz-pill").forEach(b=>{const on=b.dataset.p===bzP.prov;b.classList.toggle("sel",on);b.setAttribute("aria-pressed",on);});
+  const P=BZP[bzP.prov];
+  mods.hidden=!P;info.hidden=true;
+  if(!P){mods.innerHTML="";return;}
+  if(mods.dataset.p!==bzP.prov){
+    mods.dataset.p=bzP.prov;mods.innerHTML="";
+    P.models.forEach(m=>{const b=document.createElement("button");b.type="button";b.className="bz-pill";b.dataset.m=m.id;b.textContent=m.btn;
+      b.addEventListener("click",()=>bzPick(bzP.prov,m.id));mods.appendChild(b);});
+  }
+  mods.querySelectorAll(".bz-pill").forEach(b=>{const on=b.dataset.m===bzP.model;b.classList.toggle("sel",on);b.setAttribute("aria-pressed",on);});
+  const m=P.models.find(x=>x.id===bzP.model);
+  if(m){info.hidden=false;info.textContent=m.name+": "+bzUsd(m.pin)+" input / "+bzUsd(m.pout)+" output per 1M tokens. "+(m.note?m.note+" ":"")+"Source: "+P.src+".";}
+}
+function bzPick(p,m){
+  bzP={prov:p,model:m||null};
+  const x=m&&BZP[p].models.find(q=>q.id===m);
+  if(x){bzSet("pin",x.pin);bzSet("pout",x.pout);}
+  bzPaint();
+}
+function bzPresetInit(){
+  const prov=$("#bzProv");
+  Object.keys(BZP).concat("custom").forEach(k=>{const b=document.createElement("button");b.type="button";b.className="bz-pill prov";b.dataset.p=k;
+    b.textContent=k==="custom"?"Custom":BZP[k].label;b.addEventListener("click",()=>bzPick(k,null));prov.appendChild(b);});
+  ["#n_pin","#n_pout"].forEach(id=>$(id).addEventListener("input",()=>{if(bzP.prov!=="custom")bzPick("custom",null);}));
+  bzPaint();
+}
 function bzInit(){
   Object.keys(BZ).forEach(k=>{
     const sl=$("#s_"+k),nu=$("#n_"+k);nu.value=BZ[k];if(sl)sl.value=BZ[k];
@@ -863,7 +928,8 @@ function bzInit(){
     nu.addEventListener("input",()=>{const v=parseFloat(nu.value);if(isFinite(v))bzSet(k,v,true);});
     nu.addEventListener("change",()=>{const v=parseFloat(nu.value);bzSet(k,isFinite(v)?v:bz[k]);});
   });
-  $("#bzReset").onclick=()=>{bz={...BZ};Object.keys(BZ).forEach(k=>bzSet(k,BZ[k]));};
+  $("#bzReset").onclick=()=>{bz={...BZ};Object.keys(BZ).forEach(k=>bzSet(k,BZ[k]));bzPick("custom",null);};
+  bzPresetInit();
   bzRender();
 }
 /* view switch: toggles visibility only; the workbench DOM and its run/approval/audit state are left untouched */
