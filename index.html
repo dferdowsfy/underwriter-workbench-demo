@@ -36,6 +36,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .hbtn{background:none;border:1px solid transparent;color:#E4EAF3;border-radius:6px;padding:6px 10px;font-size:.93rem;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;min-height:34px}
 .hbtn:hover,.hbtn[aria-expanded="true"]{background:rgba(255,255,255,.1);color:#fff}
 .hbtn.outline{border-color:rgba(255,255,255,.4)}
+.hbtn.cta{background:var(--blue);color:#fff;border-color:rgba(255,255,255,.35)}
+.hbtn.cta:hover{background:var(--blue-d)}
+.hbtn[disabled]{opacity:.6;cursor:default}
 .hbtn .n{background:rgba(255,255,255,.18);border-radius:9px;padding:0 6px;font-size:.8rem}
 .hbtn svg{width:16px;height:16px;flex-shrink:0}
 .hbtn .ico{display:none;line-height:0}
@@ -61,6 +64,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .assume{display:inline-block;font-size:.79rem;font-weight:700;color:var(--ink);background:#E9EDF3;border-radius:4px;padding:0 6px;margin-left:4px}
 .pop .fine{font-size:.86rem;color:var(--muted);margin:10px 0 0}
 @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@keyframes glow{0%,100%{box-shadow:0 2px 6px rgba(0,114,188,.25),0 0 0 0 rgba(0,114,188,.45)}60%{box-shadow:0 2px 6px rgba(0,114,188,.25),0 0 0 10px rgba(0,114,188,0)}}
 /* canvas */
 .canvas{flex:1 0 auto;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);display:flex;flex-direction:column;min-width:0}
 .casebar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 16px;padding:clamp(12px,1.6vw,18px) 0 clamp(10px,1.2vw,14px);border-bottom:1px solid var(--line)}
@@ -79,7 +83,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .ag.on{background:var(--tint);box-shadow:inset 0 -3px 0 var(--blue)}
 .ag .ic{width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:.86rem;font-weight:800;flex-shrink:0}
 .ag.is-work .ic{background:none;border:2.5px solid #CFE3F3;border-top-color:var(--blue);animation:spin .7s linear infinite;color:transparent}
-.ag.is-wait .ic{background:#D5DCE5;color:#fff}
+.ag.is-wait .ic{background:#D5DCE5;color:transparent}
+.ag.is-wait .tx{color:var(--muted)}
+body:not(.is-done) .ag{cursor:default}
+body:not(.is-done) .ag:hover{background:none}
 .ag .tx{font-size:1rem;min-width:0;line-height:1.3}
 .ag .tx b{color:var(--ink)}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -105,6 +112,19 @@ button{font:inherit;color:inherit;cursor:pointer}
 .primary:hover{background:var(--blue-d)}
 .primary:active{transform:translateY(1px)}
 .acts .scope{font-size:.9rem;color:var(--muted);line-height:1.4;flex:1 1 220px;min-width:0}
+.is-hidden{display:none!important}
+.arrive{border-left:4px solid var(--blue);padding:2px 0 6px clamp(14px,1.6vw,22px);min-width:0;display:flex;flex-direction:column}
+.arrive .flag{background:var(--tint);color:var(--blue-d)}
+.arrive .why{font-family:var(--serif);font-size:clamp(1.3rem,1rem + .8vw,1.75rem);line-height:1.25;color:var(--ink);margin:10px 0 14px;max-width:34em}
+.arrive .rows{margin-bottom:6px}
+.arrive .rows .row>*{font-size:1rem}
+.primary.big{align-self:flex-start;margin-top:clamp(12px,1.6vw,20px);padding:14px 30px;font-size:1.25rem;border-radius:10px;display:inline-flex;align-items:center;gap:10px;min-height:52px}
+.primary.big.idle{animation:glow 2.2s ease-out infinite}
+.primary.big[disabled]{cursor:default;background:var(--blue-d);transform:none;animation:none}
+.primary.big .sp{width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .7s linear infinite;flex-shrink:0}
+.side.busy{pointer-events:none}
+.pend{display:none!important}
+.side-b .row>*,.side-b .fl,.side-b .qsum,.side-b .qnote,.side-b .passed,.side-b #qToggle{animation:fade .35s both}
 .sent{display:none;align-items:flex-start;gap:12px;margin-top:12px;animation:fade .35s both}
 .sent.on{display:flex}
 .sent>div{min-width:0}
@@ -207,10 +227,15 @@ table code,.mono{font-family:var(--mono);font-size:.82rem}
 .auh .s{font-size:.86rem;color:var(--muted);flex:1 1 200px}
 .b2{border:1px solid #C3CDD9;background:#fff;border-radius:6px;padding:5px 11px;font-size:.9rem;font-weight:600;color:var(--ink);white-space:nowrap}
 .b2:hover{border-color:var(--blue);color:var(--blue-d)}
+.runbar{position:sticky;bottom:0;z-index:25;background:var(--navy);color:#fff;border-top:1px solid rgba(255,255,255,.18);flex-shrink:0}
+.runbar-in{max-width:var(--maxw);margin:0 auto;padding:7px var(--gut);display:flex;align-items:center;gap:10px;font-size:.96rem;font-weight:600;min-height:34px}
+.runbar .dot{width:9px;height:9px;border-radius:50%;background:#8DA3BC;flex-shrink:0}
+.runbar.is-run .dot{width:14px;height:14px;background:none;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .7s linear infinite}
+.runbar.is-done .dot{background:#4CC38A}
 footer{background:var(--navy);color:#C9D4E5;font-size:.79rem;flex-shrink:0}
 .foot-in{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2px 16px;padding:5px var(--gut)}
 footer b{color:#fff;font-weight:600}
-.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);opacity:0;background:var(--navy);color:#fff;border-radius:8px;padding:9px 16px;font-size:.93rem;z-index:50;transition:all .3s;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.toast{position:fixed;left:50%;bottom:64px;transform:translate(-50%,16px);opacity:0;background:var(--navy);color:#fff;border-radius:8px;padding:9px 16px;font-size:.93rem;z-index:50;transition:all .3s;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* ---------- responsive ---------- */
@@ -273,7 +298,7 @@ footer b{color:#fff;font-weight:600}
    <button class="hbtn" id="btnImpact" aria-expanded="false" aria-controls="popImpact" aria-label="Illustrative impact" title="Illustrative impact"><span class="ico"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 13.5h11"/><path d="M4.5 11V8M8 11V5M11.5 11V3"/></svg></span><span class="t"><span class="t2">Illustrative impact</span><span class="t3">Impact</span></span></button>
    <button class="hbtn outline" id="btnActivity" aria-expanded="false" aria-controls="drawer" aria-label="Activity &amp; controls"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5.5 4h8M5.5 8h8M5.5 12h8"/><circle cx="2.5" cy="4" r=".9" fill="currentColor"/><circle cx="2.5" cy="8" r=".9" fill="currentColor"/><circle cx="2.5" cy="12" r=".9" fill="currentColor"/></svg><span class="t">Activity<span class="t2"> &amp; controls</span></span></button>
    <span class="hsep"></span>
-   <button class="hbtn" id="btnReplay" aria-label="Replay workflow" title="Reset to the opening decision (replays a short agent run)"><span aria-hidden="true">↺</span><span class="t">Replay<span class="t2"> workflow</span></span></button>
+   <button class="hbtn cta" id="btnReplay" aria-label="Start workflow" title="Run the agents on this new submission"><span aria-hidden="true" id="rIco">▶</span><span class="t"><span id="rWord">Start</span><span class="t2"> workflow</span></span></button>
   </nav>
  </div>
   <div class="pop" id="popCases" role="dialog" aria-label="Cases">
@@ -306,13 +331,23 @@ footer b{color:#fff;font-weight:600}
 
   <nav class="agents" id="agents" aria-label="Agent work">
     <span class="lbl">Agent work</span>
-    <button class="ag on" data-p="submission"><span class="ic">✓</span><span class="tx"><b>Submission agent</b> — extracted application details</span></button>
-    <button class="ag" data-p="risk"><span class="ic">✓</span><span class="tx"><b>Risk agent</b> — flagged missing evidence</span></button>
-    <button class="ag" data-p="quote"><span class="ic">✓</span><span class="tx"><b>Quote agent</b> — prepared draft terms</span></button>
+    <button class="ag is-wait" data-p="submission"><span class="ic"></span><span class="tx"><b>Submission agent</b> — <span class="d">waiting</span></span></button>
+    <button class="ag is-wait" data-p="risk"><span class="ic"></span><span class="tx"><b>Risk agent</b> — <span class="d">waiting</span></span></button>
+    <button class="ag is-wait" data-p="quote"><span class="ic"></span><span class="tx"><b>Quote agent</b> — <span class="d">waiting</span></span></button>
   </nav>
 
   <section class="work">
-    <div class="focus" id="focus">
+    <div class="arrive" id="arrive">
+      <span class="flag" id="arFlag">New submission</span>
+      <p class="why" id="arWhy">A new submission has arrived. Start the workflow to watch the agents prepare it for underwriter review.</p>
+      <div class="rows">
+        <div class="row"><span class="k">From</span><span class="v">Keystone Risk Partners (broker)</span></div>
+        <div class="row"><span class="k">Received</span><span class="v">09:12 ET · simulated clock</span></div>
+        <div class="row"><span class="k">Contents</span><span class="v">Broker email and 4 documents<small>ACORD 125 · ACORD 140 · loss runs 2021–2025 · statement of values</small></span></div>
+      </div>
+      <button class="primary big idle" id="btnStart"><span aria-hidden="true">▶</span><span id="startTx">Start workflow</span></button>
+    </div>
+    <div class="focus is-hidden" id="focus">
       <span class="flag" id="flag">Needs your review</span>
       <h3>Missing sprinkler inspection report</h3>
       <p class="why">The submission references sprinklers. The inspection report is missing.</p>
@@ -371,6 +406,7 @@ footer b{color:#fff;font-weight:600}
     </div>
   </div>
 </aside>
+<div class="runbar" id="runbar"><div class="runbar-in"><span class="dot" aria-hidden="true"></span><span id="runStatus" role="status" aria-live="polite">Ready · waiting for you to start the workflow</span></div></div>
 <footer><div class="foot-in"><span><b>Illustrative prototype. Fictional data. Not an NTT DATA product.</b></span><span>All names, documents, figures and rules are fictional · simulated clock (ET)</span></div></footer>
 <div class="toast" id="toast" role="status"></div>
 <script>
@@ -423,27 +459,35 @@ const FLAGS=[
 
 /* -------- state -------- */
 let S;
-function fresh(){return {approved:false,approvedAt:null,edited:false,panel:"submission",prevPanel:"submission",quoteOpen:false,audit:[],gw:[],tl:[],prev:"0000000000000000",loadedAt:performance.now(),busy:false,token:(S?S.token:0)+1};}
+function fresh(){return {stage:"idle",approved:false,approvedAt:null,edited:false,panel:"submission",prevPanel:"submission",quoteOpen:false,audit:[],gw:[],tl:[],prev:"0000000000000000",loadedAt:performance.now(),busy:false,token:(S?S.token:0)+1};}
 function h64(str){let a=0x811c9dc5,b=0x5bd1e995;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);a=Math.imul(a^c,16777619)>>>0;b=Math.imul(b^c,2246822519)>>>0;b=(b^(b>>>13))>>>0;}return a.toString(16).padStart(8,"0")+b.toString(16).padStart(8,"0");}
 function audit(ts,actor,action,decision){const e={seq:S.audit.length+1,timestamp:iso(ts),time:fmt(ts),actor,action,decision,prev_hash:S.prev};e.hash=h64(S.prev+"|"+e.timestamp+"|"+actor+"|"+action+"|"+decision);S.prev=e.hash;S.audit.push(Object.freeze(e));}
 function gw(ts,agent,tool,scope,dec,why,by){S.gw.push({ts,agent,tool,scope,dec,why:why||"",by:by||""});audit(ts,agent,`Tool call ${tool} (${scope})${why?" · "+why:""}`,dec==="ALLOW"?(by?`ALLOWED · approved by ${by}`:"ALLOWED (in scope)"):dec==="DENY"?"DENIED":"HELD for underwriter approval");}
 function ev(ts,who,text,hi){S.tl.push({ts,who,text,hi:!!hi});}
-function seed(){
-  ev(at(0),"Broker mailbox","Submission received from Keystone Risk Partners: email and 4 documents.");audit(at(0),"Broker mailbox","Submission received (email + 4 attachments)","Logged");
+function seedA(){ev(at(0),"Broker mailbox","Submission received from Keystone Risk Partners: email and 4 documents.");audit(at(0),"Broker mailbox","Submission received (email + 4 attachments)","Logged");}
+function seedB(){
   gw(at(4),"Orchestrator","mailbox.read","intake:read","ALLOW");gw(at(6),"Orchestrator","doc.classify","docs:read","ALLOW");
   ev(at(7),"Orchestrator","Routed the case to the Submission agent.");audit(at(7),"Orchestrator","Plan: extract → assess → draft → human review","Routed");
-  gw(at(11),"Submission agent","doc.extract","docs:read","ALLOW");gw(at(19),"Submission agent","address.validate","geo:read","ALLOW");gw(at(24),"Submission agent","sov.parse","docs:read","ALLOW");
+}
+function seedC1(){gw(at(11),"Submission agent","doc.extract","docs:read","ALLOW");gw(at(19),"Submission agent","address.validate","geo:read","ALLOW");gw(at(24),"Submission agent","sov.parse","docs:read","ALLOW");}
+function seedC2(){
   ev(at(38),"Submission agent","Extracted 9 application details. One required document is missing.");audit(at(38),"Submission agent","Extracted 9 fields; sprinkler inspection report not received","Done");
   gw(at(40),"Submission agent","email.draft","mail:draft","ALLOW","draft only");
   ev(at(41),"Submission agent","Drafted a request to the broker for the sprinkler inspection report.");
+}
+function seedD1(){
   gw(at(46),"Risk agent","guidelines.query","uw-guidelines:read","ALLOW");gw(at(48),"Risk agent","clearance.search","submissions:read","ALLOW");gw(at(50),"Risk agent","sanctions.screen","screening:read","ALLOW");gw(at(52),"Risk agent","property_data.lookup","3p-data:read","ALLOW","fictional source");
   gw(at(54),"Risk agent","crm.update_account","crm:write","DENY","out of scope · Risk agent is read-only");
   gw(at(57),"Risk agent","lossrun.summarize","docs:read","ALLOW");
-  ev(at(62),"Risk agent","Flagged missing evidence (guideline 3.1) and three other items, including an ammonia referral.");audit(at(62),"Risk agent","4 flags raised (1 high); referral required (guideline 4.2)","Done");
+}
+function seedD2(){ev(at(62),"Risk agent","Flagged missing evidence (guideline 3.1) and three other items, including an ammonia referral.");audit(at(62),"Risk agent","4 flags raised (1 high); referral required (guideline 4.2)","Done");}
+function seedE1(){
   gw(at(70),"Quote agent","rating.calculate","rating:sandbox","ALLOW");gw(at(73),"Quote agent","quote.save_draft","quote:draft","ALLOW");
   gw(at(75),"Quote agent","policy_admin.bind","policy:write","DENY","requires human approval");
   gw(at(77),"Quote agent","email.send_to_broker","mail:send · quote","DENY","requires human approval");
-  ev(at(78),"Quote agent","Prepared draft terms ($114,650 indication). Its attempts to bind and to send the quote were blocked.");audit(at(78),"Quote agent","Draft terms saved (illustrative $114,650)","DRAFT · not sent");
+}
+function seedE2(){ev(at(78),"Quote agent","Prepared draft terms ($114,650 indication). Its attempts to bind and to send the quote were blocked.");audit(at(78),"Quote agent","Draft terms saved (illustrative $114,650)","DRAFT · not sent");}
+function seedF(){
   gw(at(80),"Tool gateway","email.send_to_broker","mail:send · info request","HOLD","waiting for underwriter");
   ev(at(80),"Tool gateway","Broker request paused for underwriter approval.",true);
 }
@@ -483,20 +527,28 @@ function openEvidence(keys,title){
 /* -------- render: decision + drawer -------- */
 function renderDecision(){
   const a=S.approved;
-  $("#status").textContent=a?"Request sent · Awaiting broker response":"Awaiting review";$("#status").classList.toggle("is-sent",a);
-  $("#caseSt").textContent=a?"Awaiting broker":"Awaiting review";
+  const st=S.stage,dn=st==="done";
+  $("#status").textContent=a?"Request sent · Awaiting broker response":dn?"Awaiting review":st==="run"?"Agents reviewing":"New submission";$("#status").classList.toggle("is-sent",a);
+  $("#caseSt").textContent=a?"Awaiting broker":dn?"Awaiting review":st==="run"?"Agents reviewing":"New submission";
   $("#focus").classList.toggle("done",a);$("#flag").textContent=a?"Request sent":"Needs your review";
   $("#acts").style.display=a?"none":"flex";$("#sent").classList.toggle("on",a);
   $("#reqText").readOnly=a;
   if(a)$("#sentBy").textContent=`Approved by ${UW} · ${fmt(S.approvedAt)} ET (simulated clock)`;
-  $("#kHum").textContent=a?"0":"1";$("#kHumU").textContent=a?"items":"item";$("#kHumS").textContent=a?"None on this case":"Broker request";
+  $("#kHum").textContent=(a||!dn)?"0":"1";$("#kHumU").textContent=(a||!dn)?"items":"item";$("#kHumS").textContent=a?"None on this case":dn?"Broker request":"Agents have not finished yet";
   if(a){const d=Math.round((S.approvedAt-T0)/1000);$("#kResp").innerHTML=`<b>Sent ${fmt(S.approvedAt).slice(0,5)}</b> ET`;$("#kRespS").textContent=`${Math.floor(d/60)}m ${pad(d%60)}s after receipt · simulated`;}
-  else{$("#kResp").textContent="Waiting on approval";$("#kRespS").textContent="Simulated clock";}
+  else{$("#kResp").textContent=dn?"Waiting on approval":"Not started";$("#kRespS").textContent="Simulated clock";}
+  if(dn)setRunStatus(a?"Request sent · awaiting broker response":"Agents finished · one item needs your review","done");
   renderDrawer();
 }
 function renderDrawer(){
-  const a=S.approved;
-  $("#lead").className="lead "+(a?"ok":"held");
+  const a=S.approved,dn=S.stage==="done";
+  if(!dn){
+    const last=S.tl[S.tl.length-1];
+    $("#lead").className="lead";
+    $("#lead").innerHTML=S.stage==="idle"?`<div class="k">Latest · ${fmt(at(0))} ET</div><div class="e">Submission received.</div><div class="d">Waiting for the workflow to start. No agent has acted yet.</div>`
+     :`<div class="k">Latest · ${fmt(last.ts)} ET</div><div class="e">${esc(last.text)}</div><div class="d">The agents are working. Every tool call goes through the tool gateway.</div>`;
+  }else
+  $("#lead").className="lead "+(a?"ok":"held"),
   $("#lead").innerHTML=a?`<div class="k">Latest · ${fmt(S.approvedAt)} ET</div><div class="e">J. Alvarez approved and sent the broker request.</div><div class="d">The tool gateway allowed one action with the underwriter's approval. Nothing else changed: the quote is still a draft and coverage is unbound.</div>`
    :`<div class="k">Latest · ${fmt(at(80))} ET</div><div class="e">Broker request paused for underwriter approval.</div><div class="d">The Submission agent drafted it. The tool gateway holds outbound email until an underwriter approves.</div>`;
   const rows=[
@@ -505,7 +557,8 @@ function renderDrawer(){
     ["policy_admin.bind","DENY",`Coverage unbound · binding needs separate human approval${a?" (not covered by this approval)":""}`],
     ["crm.update_account","DENY","Risk agent is read-only · least privilege"]
   ];
-  $("#actList").innerHTML=rows.map(r=>`<div class="ar"><code>${r[0]}</code><span class="dec ${r[1]}">${r[1]==="ALLOW"?"ALLOWED":r[1]==="DENY"?"DENIED":"PAUSED"}</span><span class="w">${esc(r[2])}</span></div>`).join("");
+  const nd=S.done||0,shown=dn?rows:rows.filter((r,i)=>i===3?nd>=2:i===0?false:nd>=3);
+  $("#actList").innerHTML=!shown.length?`<div class="ar"><span class="w" style="grid-column:1/3">${S.stage==="idle"?"No actions yet. The agents have not started.":"Actions appear here as the agents finish."}</span></div>`:shown.map(r=>`<div class="ar"><code>${r[0]}</code><span class="dec ${r[1]}">${r[1]==="ALLOW"?"ALLOWED":r[1]==="DENY"?"DENIED":"PAUSED"}</span><span class="w">${esc(r[2])}</span></div>`).join("");
   $("#tl").innerHTML=S.tl.slice().reverse().map(e=>`<li class="${e.hi&&a&&e.who.indexOf("Alvarez")>=0?"hi":""}"><span class="tm">${fmt(e.ts)}</span><span>${esc(e.text)}<br><span class="who">${esc(e.who)}</span></span></li>`).join("");
   $("#raw").innerHTML=S.gw.slice().reverse().map(g=>`<tr><td class="mono">${fmt(g.ts)}</td><td>${esc(g.agent.replace(" agent",""))}</td><td><code>${esc(g.tool)}</code><br><span style="color:var(--muted)">${esc(g.scope)}${g.why?" · "+esc(g.why):""}${g.by?" · approved by "+esc(g.by):""}</span></td><td><span class="dec ${g.dec}">${g.dec==="HOLD"?"PAUSED":g.dec}</span></td></tr>`).join("");
   $("#au").innerHTML=S.audit.map(e=>`<tr><td class="mono">${e.seq}</td><td class="mono">${e.time}</td><td>${esc(e.actor)}</td><td>${esc(e.action)}<br><b style="color:${/DENIED/.test(e.decision)?"var(--red)":/APPROVED|approved/.test(e.decision)?"var(--green)":"var(--ink)"}">${esc(e.decision)}</b></td><td class="mono" title="prev ${e.prev_hash}">${e.hash.slice(0,8)}…</td></tr>`).join("");
@@ -541,27 +594,89 @@ let OPEN=null;
 function placePop(btn,pop){const r=btn.getBoundingClientRect();const w=Math.min(pop.offsetWidth,innerWidth-16);let left=r.right-w;left=Math.max(8,Math.min(innerWidth-w-8,left));pop.style.left=left+"px";pop.style.right="auto";pop.style.top=Math.round(Math.max(r.bottom+6,8))+"px";}
 function togglePop(btn,pop){const on=!pop.classList.contains("on");closePops();if(on){openDrawer(false);pop.classList.add("on");btn.setAttribute("aria-expanded","true");OPEN={btn,pop};placePop(btn,pop);}}
 
-/* -------- replay -------- */
-function reset(){$$(".ag").forEach(a=>a.classList.remove("is-wait","is-work"));$("#focus").style.visibility="";S=fresh();seed();$("#reqText").value=REQ;$("#reqText").readOnly=false;openDrawer(false);closePops();showPanel("submission");renderDecision();requestAnimationFrame(fitReq);}
-async function replay(){
-  reset();const tok=S.token;S.busy=true;
-  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-  const ags=$$(".ag");const focus=$("#focus");
-  ags.forEach(a=>a.classList.add("is-wait"));focus.style.visibility="hidden";
-  $("#side").innerHTML=`<div class="skel"><span class="sp"></span>Agents are reviewing the new submission…</div>`;
-  $("#status").textContent="Agents reviewing";
-  for(const a of ags){if(tok!==S.token)return;a.classList.remove("is-wait");a.classList.add("is-work");await sleep(750);a.classList.remove("is-work");}
-  if(tok!==S.token)return;
-  S.busy=false;S.loadedAt=performance.now();focus.style.visibility="";focus.animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],{duration:350});
-  showPanel("submission");renderDecision();toast("Agents finished · one item needs your review");
+/* -------- staged run -------- */
+let RAN=false;
+const AG=[
+ {p:"submission",work:"extracting application details…",done:"extracted application details",stat:"Submission agent extracting application details…"},
+ {p:"risk",work:"checking guidelines…",done:"flagged missing evidence",stat:"Risk agent checking guidelines…"},
+ {p:"quote",work:"drafting terms…",done:"prepared draft terms",stat:"Quote agent drafting terms…"}
+];
+function setRunStatus(t,mode){const b=$("#runbar");$("#runStatus").textContent=t;b.classList.toggle("is-run",mode==="run");b.classList.toggle("is-done",mode==="done");}
+function setAgent(i,state){
+  const a=$$(".ag")[i];a.classList.remove("is-wait","is-work");
+  if(state==="wait")a.classList.add("is-wait");else if(state==="work")a.classList.add("is-work");
+  a.querySelector(".ic").textContent=state==="done"?"✓":"";
+  a.querySelector(".d").textContent=state==="wait"?"waiting":state==="work"?AG[i].work:AG[i].done;
 }
+function renderStage(){
+  const st=S.stage,dn=st==="done",run=st==="run";
+  document.body.classList.toggle("is-done",dn);
+  $("#arrive").classList.toggle("is-hidden",dn);$("#focus").classList.toggle("is-hidden",!dn);
+  $("#arFlag").textContent=run?"Agents reviewing":"New submission";
+  $("#arWhy").textContent=run?"Agents are reviewing the new submission…":"A new submission has arrived. Start the workflow to watch the agents prepare it for underwriter review.";
+  const b=$("#btnStart");b.disabled=run;b.classList.toggle("idle",st==="idle");
+  b.innerHTML=run?'<span class="sp" aria-hidden="true"></span><span>Workflow running…</span>':`<span aria-hidden="true">${RAN?"↺":"▶"}</span><span>${RAN?"Replay workflow":"Start workflow"}</span>`;
+  const h=$("#btnReplay");h.classList.toggle("cta",!RAN);h.disabled=run&&!RAN;
+  $("#rIco").textContent=RAN?"↺":"▶";$("#rWord").textContent=RAN?"Replay":"Start";
+  h.setAttribute("aria-label",RAN?"Replay workflow":"Start workflow");
+  h.title=RAN?"Reset to the opening decision (replays a short agent run)":"Run the agents on this new submission";
+  $("#side").classList.toggle("busy",run);
+  if(st==="idle"){
+    $$(".ag").forEach((_,i)=>setAgent(i,"wait"));setAgentTab(null);
+    $("#side").innerHTML=`<div class="side-h"><h4>Agent output</h4><span class="sub">Waiting for the workflow to start</span></div>`;
+    setRunStatus("Ready · waiting for you to start the workflow","idle");
+  }
+  renderDecision();
+}
+function reset(){S=fresh();seedA();$("#reqText").value=REQ;$("#reqText").readOnly=false;openDrawer(false);closePops();renderStage();requestAnimationFrame(fitReq);}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+/* hide the elements of the current panel, then reveal them one by one so the output builds on screen */
+function stage(sel){return $$("#side "+sel).forEach(e=>e.classList.add("pend"));}
+async function run(){
+  if(S.stage==="run")return;
+  const tok=S.token;S.stage="run";S.busy=true;S.done=0;
+  const w=async ms=>{await sleep(ms);return tok===S.token;};
+  $$(".ag").forEach((_,i)=>setAgent(i,"wait"));setAgentTab(null);
+  $("#side").innerHTML=`<div class="side-h"><h4>Agent output</h4><span class="sub">Starting…</span></div>`;
+  renderStage();seedB();renderDrawer();
+  for(let i=0;i<3;i++){
+    if(tok!==S.token)return;
+    setAgent(i,"work");setRunStatus(AG[i].stat,"run");
+    [seedC1,seedD1,seedE1][i]();renderDrawer();
+    showPanel(AG[i].p);$("#side").classList.add("busy");
+    if(i===0){stage(".row");const rows=$$("#side .row");
+      if(!await w(120))return;
+      for(const r of rows){r.classList.remove("pend");if(!await w(150))return;}
+      if(!await w(450))return;
+    }else if(i===1){stage(".fl");stage(".passed");const fl=$$("#side .fl");
+      if(!await w(120))return;
+      for(const f of fl){f.classList.remove("pend");if(!await w(300))return;}
+      $$("#side .passed").forEach(e=>e.classList.remove("pend"));
+      if(!await w(450))return;
+    }else{stage(".qsum");stage(".qnote");stage("#qToggle");
+      if(!await w(150))return;$$("#side .qsum").forEach(e=>e.classList.remove("pend"));
+      if(!await w(500))return;$$("#side .qnote").forEach(e=>e.classList.remove("pend"));
+      if(!await w(450))return;$$("#side #qToggle").forEach(e=>e.classList.remove("pend"));
+      if(!await w(500))return;
+    }
+    if(tok!==S.token)return;
+    setAgent(i,"done");S.done=i+1;[seedC2,seedD2,seedE2][i]();renderDrawer();
+  }
+  if(tok!==S.token)return;
+  seedF();
+  S.busy=false;S.stage="done";RAN=true;S.loadedAt=performance.now();
+  showPanel("submission");renderStage();$("#side").classList.remove("busy");
+  const focus=$("#focus");focus.animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],{duration:350});
+  requestAnimationFrame(fitReq);toast("Agents finished · one item needs your review");
+}
+function replay(){reset();run();}
 
 /* -------- wiring -------- */
 $("#approve").onclick=approve;
 /* single-column layouts: the output panel sits below the decision, so bring it into view after a click */
 function reveal(){if(!matchMedia("(max-width:1099px)").matches)return;const r=$("#side").getBoundingClientRect();if(r.top<$(".top").offsetHeight||r.top>innerHeight*0.6)$("#side").scrollIntoView({behavior:"smooth",block:"start"});}
 $("#viewEvidence").onclick=()=>{openEvidence(["email","acord140p","g31"],"Sprinkler inspection report");reveal();};
-$$(".ag").forEach(b=>b.onclick=()=>{if(!S.busy){showPanel(b.dataset.p);reveal();}});
+$$(".ag").forEach(b=>b.onclick=()=>{if(S.stage==="done"){showPanel(b.dataset.p);reveal();}});
 $("#btnActivity").onclick=()=>openDrawer();$("#openRecord").onclick=()=>openDrawer(true);
 $("#drX").onclick=()=>openDrawer(false);$("#scrim").onclick=()=>openDrawer(false);
 $("#btnCases").onclick=e=>{e.stopPropagation();togglePop($("#btnCases"),$("#popCases"));};
@@ -569,7 +684,8 @@ $("#btnImpact").onclick=e=>{e.stopPropagation();togglePop($("#btnImpact"),$("#po
 document.addEventListener("click",e=>{if(!e.target.closest(".pop")&&!e.target.closest("#btnCases")&&!e.target.closest("#btnImpact"))closePops();});
 /* live resize: keep any open popover anchored to its header button and inside the viewport */
 let rzT;addEventListener("resize",()=>{cancelAnimationFrame(rzT);rzT=requestAnimationFrame(()=>{if(OPEN)placePop(OPEN.btn,OPEN.pop);});});
-$("#btnReplay").onclick=()=>{scrollTo({top:0,behavior:"smooth"});replay();};
+function startOrReplay(){if(S.stage==="run"&&!RAN)return;scrollTo({top:0,behavior:"smooth"});if(RAN||S.stage!=="idle")replay();else run();}
+$("#btnReplay").onclick=startOrReplay;$("#btnStart").onclick=startOrReplay;
 $$(".dt").forEach(b=>b.onclick=()=>{$$(".dt").forEach(x=>x.classList.toggle("on",x===b));$$(".dp").forEach(p=>p.classList.toggle("on",p.id==="dp-"+b.dataset.t));});
 $("#btnExport").onclick=exportJSON;
 
@@ -578,7 +694,7 @@ function fitReq(){const t=$("#reqText");t.style.height="auto";t.style.height=(t.
 $("#reqText").addEventListener("input",fitReq);addEventListener("resize",()=>requestAnimationFrame(fitReq));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){openDrawer(false);closePops();}});
 reset();
-window.__demo={get state(){return S;},reset,replay};
+window.__demo={get state(){return S;},reset,replay,start:startOrReplay};
 })();
 </script>
 </body>
