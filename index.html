@@ -281,6 +281,11 @@ footer b{color:#fff;font-weight:600}
 .bz-kpi .v{font-family:var(--serif);font-size:clamp(1.6rem,1.2rem + .9vw,2.15rem);line-height:1.15;color:var(--ink);margin-top:4px;overflow-wrap:anywhere}
 .bz-kpi.hero .v{color:var(--blue-d)}
 .bz-kpi .v small{font-family:var(--sans);font-size:.93rem;font-weight:600;color:var(--muted);margin-left:4px}
+.bz-net{margin-bottom:12px}
+.bz-net .bz-kpi .v{font-size:clamp(1.5rem,1.2rem + .7vw,1.9rem)}
+.bz-net .bz-kpi.flash{animation:bzflash .6s ease}
+@keyframes bzflash{0%{background:#FFF7DB}100%{background:inherit}}
+@media (max-width:520px){.bz-net{grid-template-columns:minmax(0,1fr)}}
 .bz-kpi .s{font-size:.86rem;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
 .bz-sec{margin-top:16px}
 .bz-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 14px;padding:8px 0;border-bottom:1px solid #EEF1F5;align-items:baseline}
@@ -475,6 +480,10 @@ table.bz tfoot td{font-weight:700;background:var(--soft);border-bottom:0}
     </div>
     <div class="bz-out" aria-live="polite">
       <h3 class="bz-h">Illustrative results</h3>
+      <div class="bz-kpis bz-net">
+        <div class="bz-kpi hero" id="kNetBox"><div class="l">Net value after model cost</div><div class="v" id="kNet2"></div><div class="s" id="kNet2S"></div></div>
+        <div class="bz-kpi" id="kModBox"><div class="l">Annual model (token) cost</div><div class="v" id="kTok2"></div><div class="s" id="kTok2S"></div></div>
+      </div>
       <div class="bz-kpis">
         <div class="bz-kpi hero"><div class="l">Annual Capacity Value</div><div class="v" id="kCap"></div><div class="s" id="kCapS"></div></div>
         <div class="bz-kpi"><div class="l">Hours Recovered Annually</div><div class="v" id="kHrs"></div><div class="s">Submissions × minutes saved ÷ 60</div></div>
@@ -861,6 +870,14 @@ function bzRender(){
   $("#kTok").textContent=bzMoney(r.tok);
   $("#rTps").innerHTML=bzSmall(r.tps)+"<small>≈ "+bzTrim(r.tps*100,2)+"¢ per submission</small>";
   $("#rRem").textContent=bzMin(r.rem)+" min";
+  const bz0=v=>(v<0?"-":"")+"$"+Math.round(Math.abs(v)).toLocaleString("en-US");
+  const mp=bzP.model&&BZP[bzP.prov]?BZP[bzP.prov].models.find(q=>q.id===bzP.model):null;
+  const mn=(mp?mp.name:"Custom prices")+" · "+bzUsd(bz.pin)+" in / "+bzUsd(bz.pout)+" out per 1M tokens";
+  const nt=bz0(r.net)+"|"+bzExact(r.tok)+"|"+mn;
+  $("#kNet2").textContent=bz0(r.net);$("#kNet2S").textContent="Capacity value "+bz0(r.cap)+" less model cost · not cash savings";
+  $("#kTok2").textContent=bzExact(r.tok);$("#kTok2S").textContent=mn;
+  if(bzRender.last!==undefined&&bzRender.last!==nt)["#kNetBox","#kModBox"].forEach(id=>{const e=$(id);e.classList.remove("flash");void e.offsetWidth;e.classList.add("flash");});
+  bzRender.last=nt;
   $("#rNet").innerHTML=bzMoney(r.net)+"<small>"+bzExact(r.net)+" exact</small>";
   const m=bz.min>0?bz.min:1;
   $("#barCur").style.width="100%";$("#barAgt").style.width=Math.max(0,Math.min(100,r.rem/m*100))+"%";
@@ -912,7 +929,7 @@ function bzPick(p,m){
   bzP={prov:p,model:m||null};
   const x=m&&BZP[p].models.find(q=>q.id===m);
   if(x){bzSet("pin",x.pin);bzSet("pout",x.pout);}
-  bzPaint();
+  bzPaint();bzRender();
 }
 function bzPresetInit(){
   const prov=$("#bzProv");
