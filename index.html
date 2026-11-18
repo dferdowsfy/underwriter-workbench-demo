@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Underwriter Workbench · Illustrative prototype (fictional data)</title>
+<script>/* Optional web fonts: requested only when online; system fonts are used offline */
+if(navigator.onLine){var l=document.createElement("link");l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@700&display=swap";document.head.appendChild(l);}</script>
+<style>
+:root{
+  --navy:#070F26; --ink:#0E1A33; --text:#2B3A55; --muted:#4F5B6D; --line:#DDE3EB; --soft:#F4F7FA;
+  --blue:#0072BC; --blue-d:#005B96; --blue-l:#19A3FC; --tint:#EAF3FB;
+  --amber:#FFC400; --gold:#B07F00; --amber-t:#FFF7DB;
+  --green:#18794E; --green-t:#E7F4EC; --red:#B42318; --red-t:#FDECEA;
+  --sans:"Noto Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:Georgia,"Noto Serif","Times New Roman",serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --hh:52px; --gut:clamp(14px,2.2vw,32px); --maxw:100rem;
+}
+*{box-sizing:border-box}
+html{font-size:clamp(13px,0.3vw + 10px,17.5px);-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--sans);font-size:1rem;line-height:1.45;color:var(--text);background:#fff;
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue-l);outline-offset:2px}
+/* header */
+.top{background:var(--navy);color:#fff;position:sticky;top:0;z-index:30;height:var(--hh);flex-shrink:0}
+.top-in{max-width:var(--maxw);margin:0 auto;height:100%;display:flex;align-items:center;gap:clamp(8px,1.2vw,14px);padding:0 var(--gut);min-width:0}
+.top .brand{flex-shrink:0}
+.top .brand svg{height:clamp(17px,1.6vw,21px);width:auto;display:block}
+.hdiv{width:1px;height:24px;background:rgba(255,255,255,.25);flex-shrink:0}
+.top h1{font-family:var(--serif);font-size:1.2rem;margin:0;font-weight:700;white-space:nowrap;min-width:0;flex-shrink:0;overflow:hidden;text-overflow:ellipsis}
+.proto{font-size:.75rem;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;border:1px solid rgba(255,255,255,.55);border-radius:4px;padding:2px 7px;white-space:nowrap;color:#fff;flex-shrink:0}
+.spacer{flex:1 1 0;min-width:4px}
+.nav{display:flex;align-items:center;gap:clamp(2px,.6vw,8px);flex-shrink:0}
+.hbtn{background:none;border:1px solid transparent;color:#E4EAF3;border-radius:6px;padding:6px 10px;font-size:.93rem;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;min-height:34px}
+.hbtn:hover,.hbtn[aria-expanded="true"]{background:rgba(255,255,255,.1);color:#fff}
+.hbtn.outline{border-color:rgba(255,255,255,.4)}
+.hbtn .n{background:rgba(255,255,255,.18);border-radius:9px;padding:0 6px;font-size:.8rem}
+.hbtn svg{width:16px;height:16px;flex-shrink:0}
+.hbtn .ico{display:none;line-height:0}
+.hbtn .t3{display:none}
+.hsep{width:1px;height:20px;background:rgba(255,255,255,.2)}
+/* popovers (fixed, positioned + clamped by JS) */
+.pop{position:fixed;top:calc(var(--hh) - 4px);left:8px;max-width:calc(100vw - 16px);max-height:calc(100vh - var(--hh) - 16px);overflow:auto;background:#fff;color:var(--text);border-radius:10px;box-shadow:0 14px 40px rgba(7,15,38,.22);border:1px solid var(--line);padding:14px 16px;display:none;z-index:40}
+.pop.on{display:block;animation:fade .18s ease both}
+.pop h3{margin:0 0 8px;font-size:.86rem;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
+#popCases{width:340px}
+#popImpact{width:740px}
+.case{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;width:100%;text-align:left;background:none;border:0;flex-wrap:wrap}
+.case.on{background:var(--tint)}
+.case b{color:var(--ink);font-weight:600;flex:1 1 160px;min-width:0}
+.case span{font-size:.86rem;color:var(--muted)}
+.case:disabled{cursor:default}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.tile{background:var(--soft);border-radius:8px;padding:10px 12px;min-width:0}
+.tile .l{font-size:.79rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-size:1rem;color:var(--ink);margin-top:3px}
+.tile .v b{color:var(--blue-d);font-size:1.21rem}
+.tile .s{font-size:.86rem;color:var(--muted);margin-top:2px}
+.assume{display:inline-block;font-size:.79rem;font-weight:700;color:var(--ink);background:#E9EDF3;border-radius:4px;padding:0 6px;margin-left:4px}
+.pop .fine{font-size:.86rem;color:var(--muted);margin:10px 0 0}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+/* canvas */
+.canvas{flex:1 0 auto;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);display:flex;flex-direction:column;min-width:0}
+.casebar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 16px;padding:clamp(12px,1.6vw,18px) 0 clamp(10px,1.2vw,14px);border-bottom:1px solid var(--line)}
+.casebar .t{min-width:0;flex:1 1 320px}
+.casebar h2{font-family:var(--serif);font-size:clamp(1.45rem,1.1rem + 0.9vw,2rem);line-height:1.15;margin:0;color:var(--ink);overflow-wrap:anywhere}
+.casebar .meta{font-size:.96rem;color:var(--muted);margin-top:3px}
+.casebar .meta b{color:var(--text);font-weight:600}
+.status{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-size:.96rem;font-weight:700;padding:6px 12px;border-radius:18px;background:var(--tint);color:var(--blue-d);transition:background .3s,color .3s;max-width:100%}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
+.status.is-sent{background:var(--green-t);color:var(--green)}
+/* agents row */
+.agents{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px 8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.agents .lbl{font-size:.86rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:6px;white-space:nowrap;flex:0 0 auto}
+.ag{flex:1 1 auto;display:flex;align-items:center;gap:8px;background:none;border:0;border-radius:6px;padding:8px 10px;text-align:left;color:var(--text);min-width:0;transition:background .15s,box-shadow .15s}
+.ag:hover{background:var(--soft)}
+.ag.on{background:var(--tint);box-shadow:inset 0 -3px 0 var(--blue)}
+.ag .ic{width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:.86rem;font-weight:800;flex-shrink:0}
+.ag.is-work .ic{background:none;border:2.5px solid #CFE3F3;border-top-color:var(--blue);animation:spin .7s linear infinite;color:transparent}
+.ag.is-wait .ic{background:#D5DCE5;color:#fff}
+.ag .tx{font-size:1rem;min-width:0;line-height:1.3}
+.ag .tx b{color:var(--ink)}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(0,1fr);gap:clamp(20px,2.4vw,40px);padding:clamp(14px,1.6vw,22px) 0 clamp(14px,1.6vw,22px);align-items:start}
+.focus{border-left:4px solid var(--gold);padding:2px 0 6px clamp(14px,1.6vw,22px);min-width:0;display:flex;flex-direction:column;transition:border-color .4s}
+.focus.done{border-left-color:var(--green)}
+.flag{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;font-size:.82rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;background:var(--amber);color:var(--navy);border-radius:4px;padding:2px 8px}
+.focus.done .flag{background:var(--green-t);color:var(--green)}
+.focus h3{font-family:var(--serif);font-size:clamp(1.6rem,1.1rem + 1.2vw,2.35rem);line-height:1.15;color:var(--ink);margin:8px 0 6px;overflow-wrap:anywhere}
+.focus .why{font-size:1.14rem;color:var(--text);margin:0}
+.link{background:none;border:0;padding:0;color:var(--blue-d);font-weight:600;text-decoration:underline;text-underline-offset:3px;text-align:left}
+.link:hover{color:var(--blue)}
+.evl{margin-top:6px;align-self:flex-start;font-size:1.04rem}
+.req{margin-top:clamp(10px,1.2vw,16px)}
+.req label{display:block;font-size:.93rem;color:var(--muted);margin-bottom:5px}
+.req label b{color:var(--ink)}
+.req textarea{width:100%;min-height:4.6em;height:auto;resize:vertical;overflow:hidden;border:1px solid #C3CDD9;border-radius:8px;padding:9px 11px;font:inherit;font-size:1rem;color:var(--ink);line-height:1.45;display:block;background:#fff}
+.req textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,114,188,.15)}
+.req textarea[readonly]{background:var(--soft);color:var(--text);resize:none}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:12px}
+.primary{background:var(--blue);color:#fff;border:0;border-radius:8px;padding:10px 20px;font-size:1.07rem;font-weight:700;transition:background .15s,transform .1s;box-shadow:0 2px 6px rgba(0,114,188,.25);max-width:100%}
+.primary:hover{background:var(--blue-d)}
+.primary:active{transform:translateY(1px)}
+.acts .scope{font-size:.9rem;color:var(--muted);line-height:1.4;flex:1 1 220px;min-width:0}
+.sent{display:none;align-items:flex-start;gap:12px;margin-top:12px;animation:fade .35s both}
+.sent.on{display:flex}
+.sent>div{min-width:0}
+.sent .ok{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:800;flex-shrink:0}
+.sent .st{font-size:1.14rem;font-weight:700;color:var(--ink)}
+.sent .by{font-size:.93rem;color:var(--muted)}
+.sent .scope2{font-size:.93rem;color:var(--text);margin-top:2px}
+.sent .scope2 .link{font-size:.93rem}
+/* side panel */
+.side{min-width:0;scroll-margin-top:calc(var(--hh) + 10px);display:flex;flex-direction:column;border-left:1px solid var(--line);padding-left:clamp(18px,2vw,28px)}
+.side-h{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;margin-bottom:8px}
+.side-h h4{margin:0;font-size:1.07rem;color:var(--ink);grid-column:1}
+.side-h .sub{font-size:.9rem;color:var(--muted);grid-column:1;grid-row:2}
+.side-h .back{grid-column:2;grid-row:1/3;align-self:center;font-size:.93rem}
+.side-b{min-width:0;animation:fade .2s both}
+.rows{display:grid;grid-template-columns:minmax(7.5em,auto) minmax(0,1fr);column-gap:16px}
+.row{display:contents}
+.row>*{padding:5px 0;border-bottom:1px solid #EEF1F5;font-size:.96rem;min-width:0}
+.row .k{color:var(--muted)}
+.row .v{color:var(--ink);font-weight:500;overflow-wrap:anywhere}
+.row .v small{display:block;font-size:.86rem;color:var(--muted);font-weight:400}
+.row.att .k,.row.att .v{background:var(--amber-t)}
+.row.att .k{box-shadow:inset 3px 0 0 var(--gold);padding-left:8px}
+.row .src{background:none;border:0;padding:0;font-size:.86rem;color:var(--blue-d);text-decoration:underline;text-underline-offset:2px;text-align:left}
+.fl{display:grid;grid-template-columns:4.4em minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px solid #EEF1F5}
+.fl.att{background:var(--amber-t);box-shadow:inset 3px 0 0 var(--gold);padding-left:8px}
+.sev{font-size:.86rem;font-weight:700}
+.sev.High{color:var(--red)}.sev.Medium{color:#7A5200}.sev.Low{color:var(--muted)}
+.fl .t{color:var(--ink);font-size:.96rem;min-width:0}
+.fl .t small{display:block;color:var(--muted);font-size:.86rem}
+.passed{font-size:.9rem;color:var(--muted);margin-top:8px}
+.qsum{font-size:1rem;color:var(--ink)}
+.qsum b{font-size:1.43rem;color:var(--ink)}
+.qnote{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:4px 24px;margin-top:8px}
+.qgrid>div{min-width:0}
+.qgrid h5{margin:6px 0 2px;font-size:.82rem;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
+.qr{display:flex;justify-content:space-between;gap:10px;font-size:.93rem;padding:3px 0;border-bottom:1px solid #EEF1F5}
+.qr span:first-child{min-width:0}
+.qr span:last-child{font-weight:600;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.qr .r{font-size:.82rem;color:var(--muted);font-weight:500}
+.draftmark{font-size:.79rem;font-weight:700;letter-spacing:.8px;color:var(--muted);border:1px solid #C3CDD9;border-radius:3px;padding:0 5px;margin-left:6px;vertical-align:2px}
+.ev{margin-bottom:12px}
+.ev .src{font-size:.86rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.ev blockquote{margin:0;padding:8px 12px;background:var(--soft);border-radius:6px;font-size:.96rem;color:var(--ink);overflow-wrap:anywhere}
+.ev mark{background:#FFE58A;color:var(--ink);padding:0 2px;border-radius:2px;box-shadow:0 0 0 1px var(--gold)}
+.ev .note{font-size:.9rem;color:var(--muted);margin-top:3px}
+.skel{color:var(--muted);font-size:1.07rem;display:flex;align-items:center;gap:10px;padding:30px 0}
+.skel .sp{width:18px;height:18px;border-radius:50%;border:2.5px solid #CFE3F3;border-top-color:var(--blue);animation:spin .7s linear infinite;flex-shrink:0}
+/* drawer */
+.scrim{position:fixed;inset:var(--hh) 0 0 0;background:rgba(7,15,38,.28);opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s;z-index:35}
+.scrim.on{opacity:1;visibility:visible}
+.drawer{position:fixed;top:var(--hh);bottom:0;right:0;width:min(40rem,100vw);max-width:100vw;background:#fff;box-shadow:-14px 0 40px rgba(7,15,38,.2);transform:translateX(102%);visibility:hidden;transition:transform .3s ease,visibility .3s;z-index:36;display:flex;flex-direction:column}
+.drawer.on{transform:none;visibility:visible}
+.dh{display:flex;align-items:center;gap:10px;padding:14px clamp(14px,2vw,20px) 10px;flex-shrink:0}
+.dh h3{margin:0;font-size:1.21rem;color:var(--ink);font-family:var(--serif)}
+.dh .x{margin-left:auto;background:none;border:1px solid var(--line);border-radius:6px;width:32px;height:32px;font-size:1.2rem;line-height:1;flex-shrink:0}
+.db{overflow:auto;padding:0 clamp(14px,2vw,20px) 20px;flex:1 1 auto;min-height:0;overscroll-behavior:contain}
+.lead{padding:12px 14px;border-radius:8px;background:var(--soft)}
+.lead .k{font-size:.82rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
+.lead .e{font-size:1.21rem;font-weight:700;color:var(--ink);margin:2px 0}
+.lead .d{font-size:.93rem;color:var(--text)}
+.lead.held{background:var(--amber-t);box-shadow:inset 3px 0 0 var(--gold)}
+.lead.ok{background:var(--green-t);box-shadow:inset 3px 0 0 var(--green)}
+.acts2{margin-top:14px}
+.acts2 h4{margin:0 0 6px;font-size:.82rem;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
+.ar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:7px 0;border-bottom:1px solid #EEF1F5;align-items:center}
+.ar code{font-family:var(--mono);font-size:.9rem;color:var(--ink);font-weight:600;overflow-wrap:anywhere;min-width:0}
+.ar .w{font-size:.9rem;color:var(--muted);grid-column:1/3}
+.dec{font-size:.79rem;font-weight:800;letter-spacing:.5px;border-radius:3px;padding:1px 7px;white-space:nowrap}
+.dec.ALLOW{background:var(--green-t);color:var(--green)}
+.dec.DENY{background:var(--red-t);color:var(--red)}
+.dec.HOLD{background:var(--amber);color:var(--navy)}
+.dec.DRAFT{background:#E9EDF3;color:var(--ink)}
+.dsec h4{margin:0 0 6px;font-size:.82rem;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
+.dtabs{display:flex;gap:4px;margin:16px 0 8px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:thin}
+.dt{background:none;border:0;border-bottom:2px solid transparent;padding:6px 10px;font-size:.93rem;font-weight:600;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.dt.on{color:var(--blue-d);border-bottom-color:var(--blue)}
+.dp{display:none}.dp.on{display:block}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:4.6em minmax(0,1fr);gap:10px;padding:6px 0;border-bottom:1px solid #EEF1F5;font-size:.93rem}
+.tl li>span{min-width:0;overflow-wrap:anywhere}
+.tl .tm{font-family:var(--mono);font-size:.86rem;color:var(--muted)}
+.tl .who{color:var(--muted);font-size:.86rem}
+.tl li.hi{background:var(--green-t)}
+.orch{display:grid;gap:6px;justify-items:center;margin:4px 0 12px}
+.ob{border:1px solid #B7CFE6;background:var(--tint);border-radius:6px;padding:4px 12px;font-size:.9rem;font-weight:700;color:var(--ink);text-align:center;min-width:0;max-width:100%}
+.orow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:8px;width:100%}
+.ob small{display:block;font-weight:500;color:var(--muted);font-size:.82rem}
+.ob.gw{width:100%;background:#fff}
+.ob.gw small{color:var(--text)}
+.ob.hu{background:var(--blue);color:#fff;border-color:var(--blue);border-radius:16px}
+.arrow{color:#8DA3BC;font-size:.86rem;line-height:1}
+.tw{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+table.perm,table.au,table.raw{width:100%;min-width:440px;border-collapse:collapse;font-size:.9rem;table-layout:fixed}
+table.perm th,table.au th,table.raw th{text-align:left;font-size:.79rem;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);padding:4px 6px;border-bottom:1px solid var(--line)}
+table.perm td,table.au td,table.raw td{padding:5px 6px;border-bottom:1px solid #EEF1F5;vertical-align:top;overflow-wrap:anywhere}
+table code,.mono{font-family:var(--mono);font-size:.82rem}
+.auh{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-bottom:6px}
+.auh .s{font-size:.86rem;color:var(--muted);flex:1 1 200px}
+.b2{border:1px solid #C3CDD9;background:#fff;border-radius:6px;padding:5px 11px;font-size:.9rem;font-weight:600;color:var(--ink);white-space:nowrap}
+.b2:hover{border-color:var(--blue);color:var(--blue-d)}
+footer{background:var(--navy);color:#C9D4E5;font-size:.79rem;flex-shrink:0}
+.foot-in{max-width:var(--maxw);margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2px 16px;padding:5px var(--gut)}
+footer b{color:#fff;font-weight:600}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);opacity:0;background:var(--navy);color:#fff;border-radius:8px;padding:9px 16px;font-size:.93rem;z-index:50;transition:all .3s;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- responsive ---------- */
+@media (min-width:1100px) and (max-height:760px){.casebar{padding:12px 0 10px}.work{padding:14px 0 10px}}
+@media (max-width:1099px){
+  .work{grid-template-columns:minmax(0,1fr)}
+  .side{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:clamp(14px,2vw,20px)}
+}
+@media (max-width:1099px){ .agents .lbl{flex-basis:100%} }
+@media (max-width:1179px){ .hbtn .t2{display:none} .hbtn .t3{display:inline} }
+@media (max-width:879px){ .proto,.hdiv{display:none} }
+@media (max-width:699px){
+  .proto,.hdiv{display:none}
+  .hsep{display:none}
+  .hbtn .t{display:none}
+  .hbtn .ico{display:inline-flex}
+  .hbtn .n{display:none}
+  .hbtn{padding:6px 8px}
+  .ag{flex-basis:100%}
+  .foot-in span:last-child{display:none}
+  .drawer{width:100vw;box-shadow:none}
+}
+@media (max-width:480px){
+  :root{--gut:12px}
+  .top-in{gap:6px}
+  .top h1{font-size:1rem}
+  .nav{gap:0}
+  .hbtn{padding:6px 7px}
+  .rows{grid-template-columns:minmax(0,1fr)}
+  .row .k{border-bottom:0;padding-bottom:0;font-size:.86rem}
+  .row.att .k{padding-left:8px}
+  .row.att .v{padding-left:8px}
+  .fl{grid-template-columns:minmax(0,1fr) auto}
+  .fl .sev{grid-column:1/3}
+  .primary{width:100%}
+}
+@media (max-width:400px){ .top-in{gap:4px} .top .brand svg{height:13px} .top h1{font-size:.9rem} .hbtn{padding:5px 5px} }
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="top-in">
+  <div class="brand" aria-label="NTT DATA"><svg role="img" aria-label="NTT DATA" width="167" height="34" viewBox="0 0 167 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M22.4067 0C20.7777 0 19.1703 0.35245 18.0377 0.815199C16.9063 0.35245 15.2989 0 13.6686 0C6.48572 0 0.000236511 6.76628 0.000236511 16.0504C0.000236511 26.1726 8.30054 34 18.0377 34C27.7748 34 36.0764 26.1726 36.0764 16.0504C36.0751 6.76628 29.5896 0 22.4067 0ZM18.0377 5.51242C19.4223 6.33269 21.2499 8.70982 21.2499 11.39C21.2499 13.3563 19.9479 14.9043 18.0377 14.9043C16.1274 14.9043 14.8255 13.3563 14.8255 11.39C14.8255 8.70982 16.6543 6.33269 18.0377 5.51242ZM18.0377 29.5779C10.5926 29.5779 4.43419 23.6129 4.43419 15.9617C4.43419 8.97733 9.4943 4.20404 13.4701 4.3828C11.5866 6.25282 10.445 8.97606 10.445 11.6144C10.445 16.1493 14.0581 19.329 18.0377 19.329C22.0173 19.329 25.6304 16.1493 25.6304 11.6144C25.6304 8.97606 24.4875 6.25282 22.6053 4.3828C26.5823 4.20531 31.6412 8.97733 31.6412 15.9617C31.6412 23.6129 25.4815 29.5779 18.0377 29.5779Z" fill="white"/>
+<path d="M62.05 7.74609V11.4443H67.7108V25.3242H71.7197V11.4443H77.3805V7.74609H62.0513H62.05Z" fill="white"/>
+<path d="M128.018 7.74609H117.927V11.4734H127.752C129.193 11.4734 129.756 12.1289 129.756 13.8125V14.4325H121.614C118.518 14.4325 116.978 15.9754 116.978 19.4619V20.2923C116.978 23.8776 118.575 25.3191 121.784 25.3191H133.724V13.7669C133.724 9.33972 132.255 7.74736 128.02 7.74736L128.018 7.74609ZM122.2 21.5652C121.593 21.5652 120.913 21.2571 120.913 19.7484C120.913 18.2397 121.585 17.9773 122.2 17.9773H129.754V21.5652H122.2Z" fill="white"/>
+<path d="M161.295 7.74609H151.204V11.4734H161.029C162.471 11.4734 163.032 12.1289 163.032 13.8125C163.032 13.8214 163.034 14.2905 163.034 14.4325H154.891C151.796 14.4325 150.255 15.9754 150.255 19.4619V20.2923C150.255 23.8776 151.852 25.3191 155.06 25.3191H167.001V13.7669C167.001 9.33972 165.532 7.74736 161.295 7.74736V7.74609ZM155.478 21.5652C154.871 21.5652 154.191 21.2571 154.191 19.7484C154.191 18.2397 154.864 17.9773 155.478 17.9773H163.032V21.5652H155.478Z" fill="white"/>
+<path d="M78.6529 7.74609V11.4443H84.3124V25.3242H88.3226V11.4443H93.9834V7.74609H78.6529Z" fill="white"/>
+<path d="M134.529 7.74609V11.4443H140.188V25.3242H144.199V11.4443H149.858V7.74609H134.529Z" fill="white"/>
+<path d="M115.423 19.1627V13.9038C115.423 9.29916 113.631 7.74609 109.586 7.74609H98.8551V25.3191H109.775C114.067 25.3191 115.423 23.1943 115.423 19.1627ZM111.33 19.24C111.33 20.9237 110.76 21.5791 109.319 21.5791H102.865V11.4887H109.319C110.76 11.4887 111.33 12.1441 111.33 13.8278V19.2413V19.24Z" fill="white"/>
+<path d="M56.3966 21.1337C56.3114 20.9726 50.9547 10.5766 50.3006 9.55225C49.5446 8.36939 48.6258 7.54785 46.8644 7.54785C45.2278 7.54785 43.292 8.27177 43.292 12.1842V25.325H47.2436V14.3636C47.2436 13.5775 47.194 12.4112 47.1838 12.1766C47.1749 11.9839 47.1838 11.8013 47.2818 11.7443C47.3964 11.6796 47.5096 11.7849 47.586 11.9307C47.6624 12.0777 52.6283 21.8614 53.6833 23.5121C54.4393 24.6949 55.3581 25.5165 57.1208 25.5165C58.7561 25.5165 60.6931 24.7925 60.6931 20.8801V7.73929H56.7415V18.6995C56.7415 19.4868 56.7886 20.6519 56.7988 20.8864C56.8077 21.0791 56.8001 21.2617 56.7008 21.3188C56.5875 21.3847 56.4755 21.2782 56.3966 21.1324V21.1337Z" fill="white"/>
+</svg></div>
+  <div class="hdiv"></div>
+  <h1>Underwriter Workbench</h1>
+  <span class="proto" title="Clickable simulation with fictional data">Illustrative prototype</span>
+  <div class="spacer"></div>
+  <nav class="nav" aria-label="Workbench">
+   <button class="hbtn" id="btnCases" aria-expanded="false" aria-controls="popCases" aria-label="Cases (4)" title="Cases (4)"><span class="ico"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M2 6.5h12"/></svg></span><span class="t">Cases</span> <span class="n">4</span></button>
+   <button class="hbtn" id="btnImpact" aria-expanded="false" aria-controls="popImpact" aria-label="Illustrative impact" title="Illustrative impact"><span class="ico"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 13.5h11"/><path d="M4.5 11V8M8 11V5M11.5 11V3"/></svg></span><span class="t"><span class="t2">Illustrative impact</span><span class="t3">Impact</span></span></button>
+   <button class="hbtn outline" id="btnActivity" aria-expanded="false" aria-controls="drawer" aria-label="Activity &amp; controls"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5.5 4h8M5.5 8h8M5.5 12h8"/><circle cx="2.5" cy="4" r=".9" fill="currentColor"/><circle cx="2.5" cy="8" r=".9" fill="currentColor"/><circle cx="2.5" cy="12" r=".9" fill="currentColor"/></svg><span class="t">Activity<span class="t2"> &amp; controls</span></span></button>
+   <span class="hsep"></span>
+   <button class="hbtn" id="btnReplay" aria-label="Replay workflow" title="Reset to the opening decision (replays a short agent run)"><span aria-hidden="true">↺</span><span class="t">Replay<span class="t2"> workflow</span></span></button>
+  </nav>
+ </div>
+  <div class="pop" id="popCases" role="dialog" aria-label="Cases">
+    <h3>Cases</h3>
+    <button class="case on"><b>Ridgeway Cold Storage LLC</b><span id="caseSt">Awaiting review</span></button>
+    <button class="case" disabled><b>Alder Creek Veterinary Group</b><span>In review</span></button>
+    <button class="case" disabled><b>Bluewater Marina Holdings</b><span>Referred</span></button>
+    <button class="case" disabled><b>Northgate Print Works</b><span>Awaiting broker</span></button>
+    <p class="fine">Only the Ridgeway case is active in this demo. All names are fictional.</p>
+  </div>
+  <div class="pop" id="popImpact" role="dialog" aria-label="Illustrative impact">
+    <h3>Illustrative impact · this submission</h3>
+    <div class="tiles">
+      <div class="tile"><div class="l">Prep time</div><div class="v"><b>30 min</b> manual → <b>7.5 min</b> review</div><div class="s">22.5 min saved <span class="assume">Assumption</span></div></div>
+      <div class="tile"><div class="l">First broker response</div><div class="v" id="kResp">Waiting on approval</div><div class="s" id="kRespS">Simulated clock</div></div>
+      <div class="tile"><div class="l">Human decisions pending</div><div class="v"><b id="kHum">1</b> <span id="kHumU">item</span></div><div class="s" id="kHumS">Broker request</div></div>
+    </div>
+    <p class="fine">Prep-time figures are illustrative and match the business case (30 min manual vs 7.5 min with agents). The 22.5-minute saving is an assumption, not a measurement.</p>
+  </div>
+</header>
+
+<main class="canvas" id="canvas">
+  <section class="casebar">
+    <div class="t">
+      <h2 id="caseName">Ridgeway Cold Storage LLC</h2>
+      <div class="meta"><b>Commercial property + general liability</b> · Keystone Risk Partners · TIV $18.45M · Effective 01/01/2027</div>
+    </div>
+    <span class="status" id="status" role="status">Awaiting review</span>
+  </section>
+
+  <nav class="agents" id="agents" aria-label="Agent work">
+    <span class="lbl">Agent work</span>
+    <button class="ag on" data-p="submission"><span class="ic">✓</span><span class="tx"><b>Submission agent</b> — extracted application details</span></button>
+    <button class="ag" data-p="risk"><span class="ic">✓</span><span class="tx"><b>Risk agent</b> — flagged missing evidence</span></button>
+    <button class="ag" data-p="quote"><span class="ic">✓</span><span class="tx"><b>Quote agent</b> — prepared draft terms</span></button>
+  </nav>
+
+  <section class="work">
+    <div class="focus" id="focus">
+      <span class="flag" id="flag">Needs your review</span>
+      <h3>Missing sprinkler inspection report</h3>
+      <p class="why">The submission references sprinklers. The inspection report is missing.</p>
+      <button class="link evl" id="viewEvidence">View evidence</button>
+      <div class="req">
+        <label for="reqText">Draft request to <b>Maya Chen, Keystone Risk Partners</b> · editable</label>
+        <textarea id="reqText" spellcheck="false"></textarea>
+      </div>
+      <div class="acts" id="acts">
+        <button class="primary" id="approve">Approve &amp; send request</button>
+        <span class="scope">Sends this request only. The quote stays a draft and coverage stays unbound.</span>
+      </div>
+      <div class="sent" id="sent">
+        <span class="ok" aria-hidden="true">✓</span>
+        <div><div class="st">Request sent · Awaiting broker response</div>
+          <div class="by" id="sentBy"></div>
+          <div class="scope2">Quote remains a draft · coverage unbound · <button class="link" id="openRecord">Open activity record</button></div></div>
+      </div>
+    </div>
+    <aside class="side" id="side" aria-live="polite"></aside>
+  </section>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Activity and controls">
+  <div class="dh"><h3>Activity &amp; controls</h3><button class="x" id="drX" aria-label="Close">×</button></div>
+  <div class="db">
+    <div class="lead" id="lead"></div>
+    <div class="acts2"><h4>Actions through the tool gateway</h4><div id="actList"></div></div>
+    <div class="dtabs" role="tablist">
+      <button class="dt on" data-t="timeline">Timeline</button><button class="dt" data-t="orch">Agents &amp; permissions</button><button class="dt" data-t="raw">Raw log</button><button class="dt" data-t="audit">Audit trail</button>
+    </div>
+    <div class="dp on" id="dp-timeline"><ul class="tl" id="tl"></ul></div>
+    <div class="dp" id="dp-orch">
+      <div class="orch">
+        <div class="ob">Orchestrator<small>plans and routes work</small></div><div class="arrow">▼</div>
+        <div class="orow"><div class="ob">Submission agent<small>extract &amp; validate</small></div><div class="ob">Risk agent<small>assess &amp; screen</small></div><div class="ob">Quote agent<small>draft terms</small></div></div>
+        <div class="arrow">▼</div>
+        <div class="ob gw">Tool gateway<small>Least privilege · Auditability · Human approval</small></div><div class="arrow">▼</div>
+        <div class="ob hu">Underwriter approval → Policy update</div>
+        <div style="font-size:.86rem;font-weight:700;color:var(--ink)">No autonomous binding</div>
+      </div>
+      <div class="tw"><table class="perm"><colgroup><col style="width:24%"><col style="width:42%"><col></colgroup>
+        <thead><tr><th>Agent</th><th>Allowed (scoped)</th><th>Needs approval / denied</th></tr></thead>
+        <tbody>
+          <tr><td>Orchestrator</td><td><code>mailbox.read</code> <code>doc.classify</code> <code>task.route</code></td><td>Any write to policy or email</td></tr>
+          <tr><td>Submission</td><td><code>doc.extract</code> <code>sov.parse</code> <code>address.validate</code> <code>email.draft</code></td><td><code>email.send_to_broker</code> needs approval</td></tr>
+          <tr><td>Risk</td><td><code>guidelines.query</code> <code>clearance.search</code> <code>sanctions.screen</code> <code>property_data.lookup</code></td><td><code>crm.update_account</code> denied (read-only)</td></tr>
+          <tr><td>Quote</td><td><code>rating.calculate</code> <code>quote.save_draft</code></td><td><code>policy_admin.bind</code>, quote send: need approval</td></tr>
+        </tbody></table></div>
+    </div>
+    <div class="dp" id="dp-raw"><div class="tw"><table class="raw"><colgroup><col style="width:15%"><col style="width:18%"><col><col style="width:15%"></colgroup><thead><tr><th>Time</th><th>Agent</th><th>Tool · scope</th><th>Result</th></tr></thead><tbody id="raw"></tbody></table></div></div>
+    <div class="dp" id="dp-audit">
+      <div class="auh"><span class="s" id="auStat">Append-only · hash-chained (simulated)</span><button class="b2" id="btnExport">⤓ Export JSON</button></div>
+      <div class="tw"><table class="au"><colgroup><col style="width:7%"><col style="width:14%"><col style="width:21%"><col><col style="width:17%"></colgroup><thead><tr><th>#</th><th>Time</th><th>Actor</th><th>Action · decision</th><th>Hash</th></tr></thead><tbody id="au"></tbody></table></div>
+    </div>
+  </div>
+</aside>
+<footer><div class="foot-in"><span><b>Illustrative prototype. Fictional data. Not an NTT DATA product.</b></span><span>All names, documents, figures and rules are fictional · simulated clock (ET)</span></div></footer>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
+const UW="J. Alvarez (Underwriter)",SUB_ID="HM-SUB-26-04817";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0");
+const T0=Date.UTC(2026,10,17,14,12,4); // 09:12:04 ET, simulated
+const at=s=>T0+s*1000;
+function fmt(ms){const d=new Date(ms-5*3600e3);return pad(d.getUTCHours())+":"+pad(d.getUTCMinutes())+":"+pad(d.getUTCSeconds());}
+function iso(ms){const d=new Date(ms-5*3600e3);return d.toISOString().slice(0,19)+"-05:00";}
+const REQ="Hi Maya, could you send the latest sprinkler inspection report for Ridgeway Cold Storage (ESFR system, dated within 12 months)? We need it to complete our review for the 01/01/2027 effective date. Thanks, J. Alvarez";
+
+/* -------- fictional case data -------- */
+const SNIP={
+ email:{src:"Broker email · Keystone Risk Partners · 09:12 ET",q:`Attached: ACORD 125, ACORD 140, five years of loss runs and the statement of values. <mark>The sprinkler inspection report is being updated by the vendor and will follow separately.</mark>`},
+ acord140p:{src:"ACORD 140 · Property section · Protection",q:`Protection: <mark>ESFR wet-pipe sprinklers, 100%</mark> · central station alarm · protection class 3`},
+ g31:{src:"Harborline guideline 3.1 (fictional)",q:`<mark>Sprinkler credit requires an inspection report dated within the last 12 months.</mark> If missing, request it from the broker; terms may be offered subject to receipt.`},
+ checklist:{src:"Submission checklist · Submission agent",q:`ACORD 125 ✓ · ACORD 140 ✓ · Loss runs 2021–2025 ✓ · SOV ✓ · <mark>Sprinkler inspection report ✗ not received</mark>`},
+ a125name:{src:"ACORD 125 · Applicant",q:`Applicant name: <mark>Ridgeway Cold Storage LLC</mark> · Nature of business: refrigerated warehousing`},
+ a125addr:{src:"ACORD 125 · Premises",q:`Premises address: <mark>2250 Ridgeway Industrial Pkwy, Grove City, OH 43123</mark>`},
+ sov:{src:"Statement of values · SOV_Ridgeway_2027.xlsx",q:`Building $12,600,000 · Stock $5,100,000 · BI $750,000 · Total <mark>$18,450,000</mark>`},
+ a140c:{src:"ACORD 140 · Construction",q:`Construction: <mark>Non-combustible (ISO 3) · tilt-up concrete walls, metal deck roof</mark> · built 1998, roof 2019`},
+ a140o:{src:"ACORD 140 · Occupancy & remarks",q:`Occupancy: <mark>refrigerated warehouse</mark>. Remarks: <mark>anhydrous ammonia refrigeration, approx. 6,800 lb charge</mark>.`},
+ a125lim:{src:"ACORD 125 · Limits requested",q:`<mark>Property: blanket $18,450,000 · GL: $1,000,000 each occurrence / $2,000,000 aggregate</mark>`},
+ a125eff:{src:"ACORD 125 · Policy period",q:`Proposed effective / expiration: <mark>01/01/2027 – 01/01/2028</mark>`},
+ g42:{src:"Harborline guideline 4.2 (fictional)",q:`<mark>Ammonia refrigeration requires underwriter referral review</mark>, process safety documentation and an ammonia contamination sublimit.`},
+ loss:{src:"Loss runs 2021–2025 (fictional prior carrier)",q:`03/14/2023 · Property · <mark>Water damage: frozen sprinkler branch line · $142,000 incurred</mark> · closed`},
+ g53:{src:"Harborline guideline 5.3 (fictional)",q:`<mark>Water damage loss over $100,000 in 5 years → water damage deductible of at least $50,000.</mark>`},
+ sovpeak:{src:"Statement of values · notes",q:`<mark>Stock values peak October–January; peak stock up to $6,000,000.</mark>`}
+};
+const DETAILS=[
+ ["Named insured","Ridgeway Cold Storage LLC","ACORD 125",["a125name"]],
+ ["Location","2250 Ridgeway Industrial Pkwy, Grove City, OH","ACORD 125 · validated",["a125addr"]],
+ ["Total insured value","$18,450,000","SOV reconciled with ACORD 140",["sov"]],
+ ["Construction","Non-combustible, tilt-up concrete (1998)","ACORD 140",["a140c"]],
+ ["Occupancy","Cold storage warehouse, ammonia refrigeration","ACORD 140",["a140o"]],
+ ["Fire protection","ESFR sprinklers · inspection report missing","ACORD 140 · broker email",["acord140p","email"],true],
+ ["Limits requested","Property $18.45M · GL $1M / $2M","ACORD 125",["a125lim"]],
+ ["Effective date","01/01/2027 · 12 months","ACORD 125",["a125eff"]]
+];
+const FLAGS=[
+ ["Medium","Sprinkler inspection report missing","Guideline 3.1 · request drafted for approval",["email","acord140p","g31"],true],
+ ["High","Ammonia refrigeration (about 6,800 lb)","Referral guideline 4.2 · you are the reviewer",["a140o","g42"]],
+ ["Medium","Water damage claim 2023 · $142,000","Guideline 5.3 · $50,000 water deductible",["loss","g53"]],
+ ["Low","Seasonal stock peak Oct–Jan","Guideline 6.1 · peak season endorsement",["sovpeak"]]
+];
+
+/* -------- state -------- */
+let S;
+function fresh(){return {approved:false,approvedAt:null,edited:false,panel:"submission",prevPanel:"submission",quoteOpen:false,audit:[],gw:[],tl:[],prev:"0000000000000000",loadedAt:performance.now(),busy:false,token:(S?S.token:0)+1};}
+function h64(str){let a=0x811c9dc5,b=0x5bd1e995;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);a=Math.imul(a^c,16777619)>>>0;b=Math.imul(b^c,2246822519)>>>0;b=(b^(b>>>13))>>>0;}return a.toString(16).padStart(8,"0")+b.toString(16).padStart(8,"0");}
+function audit(ts,actor,action,decision){const e={seq:S.audit.length+1,timestamp:iso(ts),time:fmt(ts),actor,action,decision,prev_hash:S.prev};e.hash=h64(S.prev+"|"+e.timestamp+"|"+actor+"|"+action+"|"+decision);S.prev=e.hash;S.audit.push(Object.freeze(e));}
+function gw(ts,agent,tool,scope,dec,why,by){S.gw.push({ts,agent,tool,scope,dec,why:why||"",by:by||""});audit(ts,agent,`Tool call ${tool} (${scope})${why?" · "+why:""}`,dec==="ALLOW"?(by?`ALLOWED · approved by ${by}`:"ALLOWED (in scope)"):dec==="DENY"?"DENIED":"HELD for underwriter approval");}
+function ev(ts,who,text,hi){S.tl.push({ts,who,text,hi:!!hi});}
+function seed(){
+  ev(at(0),"Broker mailbox","Submission received from Keystone Risk Partners: email and 4 documents.");audit(at(0),"Broker mailbox","Submission received (email + 4 attachments)","Logged");
+  gw(at(4),"Orchestrator","mailbox.read","intake:read","ALLOW");gw(at(6),"Orchestrator","doc.classify","docs:read","ALLOW");
+  ev(at(7),"Orchestrator","Routed the case to the Submission agent.");audit(at(7),"Orchestrator","Plan: extract → assess → draft → human review","Routed");
+  gw(at(11),"Submission agent","doc.extract","docs:read","ALLOW");gw(at(19),"Submission agent","address.validate","geo:read","ALLOW");gw(at(24),"Submission agent","sov.parse","docs:read","ALLOW");
+  ev(at(38),"Submission agent","Extracted 9 application details. One required document is missing.");audit(at(38),"Submission agent","Extracted 9 fields; sprinkler inspection report not received","Done");
+  gw(at(40),"Submission agent","email.draft","mail:draft","ALLOW","draft only");
+  ev(at(41),"Submission agent","Drafted a request to the broker for the sprinkler inspection report.");
+  gw(at(46),"Risk agent","guidelines.query","uw-guidelines:read","ALLOW");gw(at(48),"Risk agent","clearance.search","submissions:read","ALLOW");gw(at(50),"Risk agent","sanctions.screen","screening:read","ALLOW");gw(at(52),"Risk agent","property_data.lookup","3p-data:read","ALLOW","fictional source");
+  gw(at(54),"Risk agent","crm.update_account","crm:write","DENY","out of scope · Risk agent is read-only");
+  gw(at(57),"Risk agent","lossrun.summarize","docs:read","ALLOW");
+  ev(at(62),"Risk agent","Flagged missing evidence (guideline 3.1) and three other items, including an ammonia referral.");audit(at(62),"Risk agent","4 flags raised (1 high); referral required (guideline 4.2)","Done");
+  gw(at(70),"Quote agent","rating.calculate","rating:sandbox","ALLOW");gw(at(73),"Quote agent","quote.save_draft","quote:draft","ALLOW");
+  gw(at(75),"Quote agent","policy_admin.bind","policy:write","DENY","requires human approval");
+  gw(at(77),"Quote agent","email.send_to_broker","mail:send · quote","DENY","requires human approval");
+  ev(at(78),"Quote agent","Prepared draft terms ($114,650 indication). Its attempts to bind and to send the quote were blocked.");audit(at(78),"Quote agent","Draft terms saved (illustrative $114,650)","DRAFT · not sent");
+  gw(at(80),"Tool gateway","email.send_to_broker","mail:send · info request","HOLD","waiting for underwriter");
+  ev(at(80),"Tool gateway","Broker request paused for underwriter approval.",true);
+}
+
+/* -------- render: side panel -------- */
+function snipHTML(keys){return keys.map(k=>`<div class="ev"><div class="src">${esc(SNIP[k].src)}</div><blockquote>${SNIP[k].q}</blockquote></div>`).join("");}
+function setAgentTab(p){$$(".ag").forEach(b=>b.classList.toggle("on",b.dataset.p===p));}
+function showPanel(p){
+  if(p!=="evidence"){S.panel=p;setAgentTab(p);}
+  const side=$("#side");let h="";
+  if(p==="submission"){
+    h=`<div class="side-h"><h4>Extracted application details</h4><span class="sub">Submission agent · click a source to check it</span></div><div class="side-b"><div class="rows">${DETAILS.map((d,i)=>`<div class="row${d[4]?" att":""}"><span class="k">${esc(d[0])}</span><span class="v">${esc(d[1])}<small><button class="src" data-d="${i}">${esc(d[2])}</button></small></span></div>`).join("")}</div></div>`;
+  }else if(p==="risk"){
+    h=`<div class="side-h"><h4>Flags</h4><span class="sub">Risk agent · each linked to its evidence</span></div><div class="side-b">${FLAGS.map((f,i)=>`<div class="fl${f[4]?" att":""}"><span class="sev ${f[0]}">${f[0]}</span><span class="t">${esc(f[1])}<small>${esc(f[2])}</small></span><button class="link" style="font-size:12.5px" data-f="${i}">Evidence</button></div>`).join("")}
+      <p class="passed">Passed: appetite (with referral), clearance and duplicate check, sanctions screen, fictional third-party property data.</p></div>`;
+  }else if(p==="quote"){
+    h=`<div class="side-h"><h4>Draft terms <span class="draftmark">DRAFT</span></h4><span class="sub">Quote agent · not quoted, not bound</span></div><div class="side-b">
+      <div class="qsum">Indication <b>$114,650</b> <span style="color:var(--muted);font-size:.93rem">(illustrative, excl. taxes and fees)</span></div>
+      <div class="qnote">Bind and send were blocked by the tool gateway. Coverage is unbound.</div>
+      <button class="link" id="qToggle" aria-expanded="${S.quoteOpen}">${S.quoteOpen?"Hide draft quote":"View draft quote"}</button>
+      ${S.quoteOpen?`<div class="qgrid"><div><h5>Premium</h5><div class="qr"><span>Commercial property</span><span>$96,400</span></div><div class="qr"><span>General liability</span><span>$18,250</span></div><div class="qr"><span><b>Total indication</b></span><span>$114,650</span></div>
+        <h5>Deductibles</h5><div class="qr"><span>All other perils</span><span>$25,000</span></div><div class="qr"><span>Water damage <span class="r">G-5.3</span></span><span>$50,000</span></div><div class="qr"><span>Equipment breakdown</span><span>$25,000</span></div></div>
+        <div><h5>Endorsements</h5><div class="qr"><span>Ammonia contamination <span class="r">G-4.2</span></span><span>$250,000</span></div><div class="qr"><span>Spoilage / refrigeration <span class="r">G-4.2</span></span><span>$500,000</span></div><div class="qr"><span>Sprinkler safeguards <span class="r">G-3.1</span></span><span>Required</span></div><div class="qr"><span>Peak season stock <span class="r">G-6.1</span></span><span>+$900,000</span></div>
+        <h5>Subject to</h5><div class="qr"><span>Sprinkler inspection report</span><span>G-3.1</span></div><div class="qr"><span>Ammonia safety documentation</span><span>G-4.2</span></div></div></div>`:""}</div>`;
+  }
+  side.innerHTML=h;
+  side.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>openEvidence(DETAILS[+b.dataset.d][3],DETAILS[+b.dataset.d][0]));
+  side.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>openEvidence(FLAGS[+b.dataset.f][3],FLAGS[+b.dataset.f][1]));
+  const qt=$("#qToggle");if(qt)qt.onclick=()=>{S.quoteOpen=!S.quoteOpen;showPanel("quote");};
+}
+function openEvidence(keys,title){
+  const side=$("#side");const back=S.panel;setAgentTab(null);
+  side.innerHTML=`<div class="side-h"><h4>Evidence</h4><span class="sub">${esc(title)}</span><button class="link back" id="evBack">Back to ${back==="submission"?"details":back==="risk"?"flags":"draft terms"}</button></div><div class="side-b" id="evBody">${snipHTML(keys)}<p class="note" style="font-size:12.5px;color:var(--muted);margin:0">Highlighted text is what the agent relied on. Fictional sample documents.</p></div>`;
+  $("#evBack").onclick=()=>showPanel(back);
+}
+
+/* -------- render: decision + drawer -------- */
+function renderDecision(){
+  const a=S.approved;
+  $("#status").textContent=a?"Request sent · Awaiting broker response":"Awaiting review";$("#status").classList.toggle("is-sent",a);
+  $("#caseSt").textContent=a?"Awaiting broker":"Awaiting review";
+  $("#focus").classList.toggle("done",a);$("#flag").textContent=a?"Request sent":"Needs your review";
+  $("#acts").style.display=a?"none":"flex";$("#sent").classList.toggle("on",a);
+  $("#reqText").readOnly=a;
+  if(a)$("#sentBy").textContent=`Approved by ${UW} · ${fmt(S.approvedAt)} ET (simulated clock)`;
+  $("#kHum").textContent=a?"0":"1";$("#kHumU").textContent=a?"items":"item";$("#kHumS").textContent=a?"None on this case":"Broker request";
+  if(a){const d=Math.round((S.approvedAt-T0)/1000);$("#kResp").innerHTML=`<b>Sent ${fmt(S.approvedAt).slice(0,5)}</b> ET`;$("#kRespS").textContent=`${Math.floor(d/60)}m ${pad(d%60)}s after receipt · simulated`;}
+  else{$("#kResp").textContent="Waiting on approval";$("#kRespS").textContent="Simulated clock";}
+  renderDrawer();
+}
+function renderDrawer(){
+  const a=S.approved;
+  $("#lead").className="lead "+(a?"ok":"held");
+  $("#lead").innerHTML=a?`<div class="k">Latest · ${fmt(S.approvedAt)} ET</div><div class="e">J. Alvarez approved and sent the broker request.</div><div class="d">The tool gateway allowed one action with the underwriter's approval. Nothing else changed: the quote is still a draft and coverage is unbound.</div>`
+   :`<div class="k">Latest · ${fmt(at(80))} ET</div><div class="e">Broker request paused for underwriter approval.</div><div class="d">The Submission agent drafted it. The tool gateway holds outbound email until an underwriter approves.</div>`;
+  const rows=[
+    a?["email.send_to_broker","ALLOW",`Authorized: sprinkler report request to Maya Chen · approved by ${UW} at ${fmt(S.approvedAt)} ET`]:["email.send_to_broker","HOLD","Sprinkler report request · waiting for underwriter approval"],
+    ["quote.send_to_broker","DENY","Quote is a draft · sending terms needs a separate underwriter decision"],
+    ["policy_admin.bind","DENY",`Coverage unbound · binding needs separate human approval${a?" (not covered by this approval)":""}`],
+    ["crm.update_account","DENY","Risk agent is read-only · least privilege"]
+  ];
+  $("#actList").innerHTML=rows.map(r=>`<div class="ar"><code>${r[0]}</code><span class="dec ${r[1]}">${r[1]==="ALLOW"?"ALLOWED":r[1]==="DENY"?"DENIED":"PAUSED"}</span><span class="w">${esc(r[2])}</span></div>`).join("");
+  $("#tl").innerHTML=S.tl.slice().reverse().map(e=>`<li class="${e.hi&&a&&e.who.indexOf("Alvarez")>=0?"hi":""}"><span class="tm">${fmt(e.ts)}</span><span>${esc(e.text)}<br><span class="who">${esc(e.who)}</span></span></li>`).join("");
+  $("#raw").innerHTML=S.gw.slice().reverse().map(g=>`<tr><td class="mono">${fmt(g.ts)}</td><td>${esc(g.agent.replace(" agent",""))}</td><td><code>${esc(g.tool)}</code><br><span style="color:var(--muted)">${esc(g.scope)}${g.why?" · "+esc(g.why):""}${g.by?" · approved by "+esc(g.by):""}</span></td><td><span class="dec ${g.dec}">${g.dec==="HOLD"?"PAUSED":g.dec}</span></td></tr>`).join("");
+  $("#au").innerHTML=S.audit.map(e=>`<tr><td class="mono">${e.seq}</td><td class="mono">${e.time}</td><td>${esc(e.actor)}</td><td>${esc(e.action)}<br><b style="color:${/DENIED/.test(e.decision)?"var(--red)":/APPROVED|approved/.test(e.decision)?"var(--green)":"var(--ink)"}">${esc(e.decision)}</b></td><td class="mono" title="prev ${e.prev_hash}">${e.hash.slice(0,8)}…</td></tr>`).join("");
+  $("#auStat").textContent=`Append-only · hash-chained (simulated) · ${S.audit.length} entries`;
+}
+
+/* -------- actions -------- */
+function approve(){
+  if(S.approved||S.busy)return;
+  const txt=$("#reqText").value.trim()||REQ;
+  const now=at(80)+Math.max(45,Math.round((performance.now()-S.loadedAt)/1000))*1000;
+  if(txt!==REQ){S.edited=true;audit(now-2000,UW,"Edited draft broker request","Edit saved");}
+  S.approved=true;S.approvedAt=now;
+  audit(now,UW,"Approved broker request: sprinkler inspection report","APPROVED by "+UW);
+  gw(now+1000,"Submission agent","email.send_to_broker","mail:send · info request","ALLOW","approval token",UW);
+  ev(now,UW,"Approved the broker request.",true);
+  ev(now+1000,"Tool gateway","Authorized action: request sent to Maya Chen, Keystone Risk Partners. Awaiting broker response.",true);
+  audit(now+2000,"Tool gateway","Scope check after approval: quote send and policy_admin.bind not authorized","Quote remains DRAFT · coverage unbound");
+  S.approvedAt=now;renderDecision();toast("Request sent · approval recorded");
+}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2400);}
+function exportJSON(){
+  const data={title:"Underwriter Workbench activity record",disclaimer:"Illustrative prototype. Fictional data. Not an NTT DATA product.",submission_id:SUB_ID,insured:"Ridgeway Cold Storage LLC (fictional)",clock:"simulated, America/New_York (UTC-05:00)",
+    status:S.approved?"Request sent · Awaiting broker response":"Awaiting review",quote:"DRAFT",coverage:"UNBOUND",
+    approval:S.approved?{action:"email.send_to_broker (sprinkler inspection report request)",approved_by:UW,approved_at:iso(S.approvedAt)}:null,
+    audit_trail:S.audit,gateway_calls:S.gw.map(g=>({timestamp:iso(g.ts),agent:g.agent,tool:g.tool,scope:g.scope,decision:g.dec,note:g.why||null,approved_by:g.by||null}))};
+  const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=`activity_record_${SUB_ID}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast("Activity record exported as JSON");
+}
+function openDrawer(on){const d=$("#drawer");on=on===undefined?!d.classList.contains("on"):on;d.classList.toggle("on",on);$("#scrim").classList.toggle("on",on);$("#btnActivity").setAttribute("aria-expanded",String(on));if(on){closePops();d.querySelector(".db").scrollTop=0;}}
+function closePops(){$$(".pop").forEach(p=>p.classList.remove("on"));["#btnCases","#btnImpact"].forEach(b=>$(b).setAttribute("aria-expanded","false"));OPEN=null;}
+let OPEN=null;
+/* anchor = visible header button; clamps popover inside the viewport (re-run on resize) */
+function placePop(btn,pop){const r=btn.getBoundingClientRect();const w=Math.min(pop.offsetWidth,innerWidth-16);let left=r.right-w;left=Math.max(8,Math.min(innerWidth-w-8,left));pop.style.left=left+"px";pop.style.right="auto";pop.style.top=Math.round(Math.max(r.bottom+6,8))+"px";}
+function togglePop(btn,pop){const on=!pop.classList.contains("on");closePops();if(on){openDrawer(false);pop.classList.add("on");btn.setAttribute("aria-expanded","true");OPEN={btn,pop};placePop(btn,pop);}}
+
+/* -------- replay -------- */
+function reset(){$$(".ag").forEach(a=>a.classList.remove("is-wait","is-work"));$("#focus").style.visibility="";S=fresh();seed();$("#reqText").value=REQ;$("#reqText").readOnly=false;openDrawer(false);closePops();showPanel("submission");renderDecision();requestAnimationFrame(fitReq);}
+async function replay(){
+  reset();const tok=S.token;S.busy=true;
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const ags=$$(".ag");const focus=$("#focus");
+  ags.forEach(a=>a.classList.add("is-wait"));focus.style.visibility="hidden";
+  $("#side").innerHTML=`<div class="skel"><span class="sp"></span>Agents are reviewing the new submission…</div>`;
+  $("#status").textContent="Agents reviewing";
+  for(const a of ags){if(tok!==S.token)return;a.classList.remove("is-wait");a.classList.add("is-work");await sleep(750);a.classList.remove("is-work");}
+  if(tok!==S.token)return;
+  S.busy=false;S.loadedAt=performance.now();focus.style.visibility="";focus.animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],{duration:350});
+  showPanel("submission");renderDecision();toast("Agents finished · one item needs your review");
+}
+
+/* -------- wiring -------- */
+$("#approve").onclick=approve;
+/* single-column layouts: the output panel sits below the decision, so bring it into view after a click */
+function reveal(){if(!matchMedia("(max-width:1099px)").matches)return;const r=$("#side").getBoundingClientRect();if(r.top<$(".top").offsetHeight||r.top>innerHeight*0.6)$("#side").scrollIntoView({behavior:"smooth",block:"start"});}
+$("#viewEvidence").onclick=()=>{openEvidence(["email","acord140p","g31"],"Sprinkler inspection report");reveal();};
+$$(".ag").forEach(b=>b.onclick=()=>{if(!S.busy){showPanel(b.dataset.p);reveal();}});
+$("#btnActivity").onclick=()=>openDrawer();$("#openRecord").onclick=()=>openDrawer(true);
+$("#drX").onclick=()=>openDrawer(false);$("#scrim").onclick=()=>openDrawer(false);
+$("#btnCases").onclick=e=>{e.stopPropagation();togglePop($("#btnCases"),$("#popCases"));};
+$("#btnImpact").onclick=e=>{e.stopPropagation();togglePop($("#btnImpact"),$("#popImpact"));};
+document.addEventListener("click",e=>{if(!e.target.closest(".pop")&&!e.target.closest("#btnCases")&&!e.target.closest("#btnImpact"))closePops();});
+/* live resize: keep any open popover anchored to its header button and inside the viewport */
+let rzT;addEventListener("resize",()=>{cancelAnimationFrame(rzT);rzT=requestAnimationFrame(()=>{if(OPEN)placePop(OPEN.btn,OPEN.pop);});});
+$("#btnReplay").onclick=()=>{scrollTo({top:0,behavior:"smooth"});replay();};
+$$(".dt").forEach(b=>b.onclick=()=>{$$(".dt").forEach(x=>x.classList.toggle("on",x===b));$$(".dp").forEach(p=>p.classList.toggle("on",p.id==="dp-"+b.dataset.t));});
+$("#btnExport").onclick=exportJSON;
+
+/* auto-size the draft request so it never hides text at any width */
+function fitReq(){const t=$("#reqText");t.style.height="auto";t.style.height=(t.scrollHeight+2)+"px";}
+$("#reqText").addEventListener("input",fitReq);addEventListener("resize",()=>requestAnimationFrame(fitReq));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){openDrawer(false);closePops();}});
+reset();
+window.__demo={get state(){return S;},reset,replay};
+})();
+</script>
+</body>
+</html>
