@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Underwriter Workbench · Illustrative prototype (fictional data)</title>
+<title>Underwriter Workbench · Independent concept prototype (fictional data)</title>
 <script>/* Optional web fonts: requested only when online; system fonts are used offline */
 if(navigator.onLine){var l=document.createElement("link");l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@700&display=swap";document.head.appendChild(l);}</script>
 <style>
@@ -74,7 +74,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .casebar .meta b{color:var(--text);font-weight:600}
 .status{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-size:.96rem;font-weight:700;padding:6px 12px;border-radius:18px;background:var(--tint);color:var(--blue-d);transition:background .3s,color .3s;max-width:100%}
 .status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
-.status.is-sent{background:var(--green-t);color:var(--green)}
+.status.is-sent{background:var(--amber-t);color:#7A5200}
 /* agents row */
 .agents{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px 8px;padding:10px 0;border-bottom:1px solid var(--line)}
 .agents .lbl{font-size:.86rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:6px;white-space:nowrap;flex:0 0 auto}
@@ -125,6 +125,8 @@ body:not(.is-done) .ag:hover{background:none}
 .side.busy{pointer-events:none}
 .pend{display:none!important}
 .side-b .row>*,.side-b .fl,.side-b .qsum,.side-b .qnote,.side-b .passed,.side-b #qToggle{animation:fade .35s both}
+.also{margin-top:14px;padding:8px 12px;background:var(--amber-t);box-shadow:inset 3px 0 0 var(--gold);border-radius:4px;font-size:.96rem;color:var(--ink)}
+.tl li.pd{background:var(--amber-t)}
 .sent{display:none;align-items:flex-start;gap:12px;margin-top:12px;animation:fade .35s both}
 .sent.on{display:flex}
 .sent>div{min-width:0}
@@ -279,19 +281,8 @@ footer b{color:#fff;font-weight:600}
 <body>
 <header class="top">
  <div class="top-in">
-  <div class="brand" aria-label="NTT DATA"><svg role="img" aria-label="NTT DATA" width="167" height="34" viewBox="0 0 167 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M22.4067 0C20.7777 0 19.1703 0.35245 18.0377 0.815199C16.9063 0.35245 15.2989 0 13.6686 0C6.48572 0 0.000236511 6.76628 0.000236511 16.0504C0.000236511 26.1726 8.30054 34 18.0377 34C27.7748 34 36.0764 26.1726 36.0764 16.0504C36.0751 6.76628 29.5896 0 22.4067 0ZM18.0377 5.51242C19.4223 6.33269 21.2499 8.70982 21.2499 11.39C21.2499 13.3563 19.9479 14.9043 18.0377 14.9043C16.1274 14.9043 14.8255 13.3563 14.8255 11.39C14.8255 8.70982 16.6543 6.33269 18.0377 5.51242ZM18.0377 29.5779C10.5926 29.5779 4.43419 23.6129 4.43419 15.9617C4.43419 8.97733 9.4943 4.20404 13.4701 4.3828C11.5866 6.25282 10.445 8.97606 10.445 11.6144C10.445 16.1493 14.0581 19.329 18.0377 19.329C22.0173 19.329 25.6304 16.1493 25.6304 11.6144C25.6304 8.97606 24.4875 6.25282 22.6053 4.3828C26.5823 4.20531 31.6412 8.97733 31.6412 15.9617C31.6412 23.6129 25.4815 29.5779 18.0377 29.5779Z" fill="white"/>
-<path d="M62.05 7.74609V11.4443H67.7108V25.3242H71.7197V11.4443H77.3805V7.74609H62.0513H62.05Z" fill="white"/>
-<path d="M128.018 7.74609H117.927V11.4734H127.752C129.193 11.4734 129.756 12.1289 129.756 13.8125V14.4325H121.614C118.518 14.4325 116.978 15.9754 116.978 19.4619V20.2923C116.978 23.8776 118.575 25.3191 121.784 25.3191H133.724V13.7669C133.724 9.33972 132.255 7.74736 128.02 7.74736L128.018 7.74609ZM122.2 21.5652C121.593 21.5652 120.913 21.2571 120.913 19.7484C120.913 18.2397 121.585 17.9773 122.2 17.9773H129.754V21.5652H122.2Z" fill="white"/>
-<path d="M161.295 7.74609H151.204V11.4734H161.029C162.471 11.4734 163.032 12.1289 163.032 13.8125C163.032 13.8214 163.034 14.2905 163.034 14.4325H154.891C151.796 14.4325 150.255 15.9754 150.255 19.4619V20.2923C150.255 23.8776 151.852 25.3191 155.06 25.3191H167.001V13.7669C167.001 9.33972 165.532 7.74736 161.295 7.74736V7.74609ZM155.478 21.5652C154.871 21.5652 154.191 21.2571 154.191 19.7484C154.191 18.2397 154.864 17.9773 155.478 17.9773H163.032V21.5652H155.478Z" fill="white"/>
-<path d="M78.6529 7.74609V11.4443H84.3124V25.3242H88.3226V11.4443H93.9834V7.74609H78.6529Z" fill="white"/>
-<path d="M134.529 7.74609V11.4443H140.188V25.3242H144.199V11.4443H149.858V7.74609H134.529Z" fill="white"/>
-<path d="M115.423 19.1627V13.9038C115.423 9.29916 113.631 7.74609 109.586 7.74609H98.8551V25.3191H109.775C114.067 25.3191 115.423 23.1943 115.423 19.1627ZM111.33 19.24C111.33 20.9237 110.76 21.5791 109.319 21.5791H102.865V11.4887H109.319C110.76 11.4887 111.33 12.1441 111.33 13.8278V19.2413V19.24Z" fill="white"/>
-<path d="M56.3966 21.1337C56.3114 20.9726 50.9547 10.5766 50.3006 9.55225C49.5446 8.36939 48.6258 7.54785 46.8644 7.54785C45.2278 7.54785 43.292 8.27177 43.292 12.1842V25.325H47.2436V14.3636C47.2436 13.5775 47.194 12.4112 47.1838 12.1766C47.1749 11.9839 47.1838 11.8013 47.2818 11.7443C47.3964 11.6796 47.5096 11.7849 47.586 11.9307C47.6624 12.0777 52.6283 21.8614 53.6833 23.5121C54.4393 24.6949 55.3581 25.5165 57.1208 25.5165C58.7561 25.5165 60.6931 24.7925 60.6931 20.8801V7.73929H56.7415V18.6995C56.7415 19.4868 56.7886 20.6519 56.7988 20.8864C56.8077 21.0791 56.8001 21.2617 56.7008 21.3188C56.5875 21.3847 56.4755 21.2782 56.3966 21.1324V21.1337Z" fill="white"/>
-</svg></div>
-  <div class="hdiv"></div>
   <h1>Underwriter Workbench</h1>
-  <span class="proto" title="Clickable simulation with fictional data">Illustrative prototype</span>
+  <span class="proto" title="Clickable simulation with fictional data">Independent Concept Prototype</span>
   <div class="spacer"></div>
   <nav class="nav" aria-label="Workbench">
    <button class="hbtn" id="btnCases" aria-expanded="false" aria-controls="popCases" aria-label="Cases (4)" title="Cases (4)"><span class="ico"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M2 6.5h12"/></svg></span><span class="t">Cases</span> <span class="n">4</span></button>
@@ -366,6 +357,7 @@ footer b{color:#fff;font-weight:600}
           <div class="by" id="sentBy"></div>
           <div class="scope2">Quote remains a draft · coverage unbound · <button class="link" id="openRecord">Open activity record</button></div></div>
       </div>
+      <div class="also" id="also"><b>Also open:</b> ammonia refrigeration referral (guideline 4.2) requires underwriter review. It is separate from this request.</div>
     </div>
     <aside class="side" id="side" aria-live="polite"></aside>
   </section>
@@ -376,6 +368,7 @@ footer b{color:#fff;font-weight:600}
   <div class="dh"><h3>Activity &amp; controls</h3><button class="x" id="drX" aria-label="Close">×</button></div>
   <div class="db">
     <div class="lead" id="lead"></div>
+    <div class="acts2" id="openBlk"><h4>Open items</h4><div id="openList"></div></div>
     <div class="acts2"><h4>Actions through the tool gateway</h4><div id="actList"></div></div>
     <div class="dtabs" role="tablist">
       <button class="dt on" data-t="timeline">Timeline</button><button class="dt" data-t="orch">Agents &amp; permissions</button><button class="dt" data-t="raw">Raw log</button><button class="dt" data-t="audit">Audit trail</button>
@@ -407,7 +400,7 @@ footer b{color:#fff;font-weight:600}
   </div>
 </aside>
 <div class="runbar" id="runbar"><div class="runbar-in"><span class="dot" aria-hidden="true"></span><span id="runStatus" role="status" aria-live="polite">Ready · waiting for you to start the workflow</span></div></div>
-<footer><div class="foot-in"><span><b>Illustrative prototype. Fictional data. Not an NTT DATA product.</b></span><span>All names, documents, figures and rules are fictional · simulated clock (ET)</span></div></footer>
+<footer><div class="foot-in"><span><b>Independent concept prototype · Fictional data · Not affiliated with or endorsed by NTT DATA.</b></span><span>All names, documents, figures and rules are fictional · simulated clock (ET)</span></div></footer>
 <div class="toast" id="toast" role="status"></div>
 <script>
 (function(){
@@ -452,7 +445,7 @@ const DETAILS=[
 ];
 const FLAGS=[
  ["Medium","Sprinkler inspection report missing","Guideline 3.1 · request drafted for approval",["email","acord140p","g31"],true],
- ["High","Ammonia refrigeration (about 6,800 lb)","Referral guideline 4.2 · you are the reviewer",["a140o","g42"]],
+ ["High","Ammonia refrigeration (about 6,800 lb)","Referral guideline 4.2 · pending · requires underwriter review",["a140o","g42"]],
  ["Medium","Water damage claim 2023 · $142,000","Guideline 5.3 · $50,000 water deductible",["loss","g53"]],
  ["Low","Seasonal stock peak Oct–Jan","Guideline 6.1 · peak season endorsement",["sovpeak"]]
 ];
@@ -463,7 +456,7 @@ function fresh(){return {stage:"idle",approved:false,approvedAt:null,edited:fals
 function h64(str){let a=0x811c9dc5,b=0x5bd1e995;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);a=Math.imul(a^c,16777619)>>>0;b=Math.imul(b^c,2246822519)>>>0;b=(b^(b>>>13))>>>0;}return a.toString(16).padStart(8,"0")+b.toString(16).padStart(8,"0");}
 function audit(ts,actor,action,decision){const e={seq:S.audit.length+1,timestamp:iso(ts),time:fmt(ts),actor,action,decision,prev_hash:S.prev};e.hash=h64(S.prev+"|"+e.timestamp+"|"+actor+"|"+action+"|"+decision);S.prev=e.hash;S.audit.push(Object.freeze(e));}
 function gw(ts,agent,tool,scope,dec,why,by){S.gw.push({ts,agent,tool,scope,dec,why:why||"",by:by||""});audit(ts,agent,`Tool call ${tool} (${scope})${why?" · "+why:""}`,dec==="ALLOW"?(by?`ALLOWED · approved by ${by}`:"ALLOWED (in scope)"):dec==="DENY"?"DENIED":"HELD for underwriter approval");}
-function ev(ts,who,text,hi){S.tl.push({ts,who,text,hi:!!hi});}
+function ev(ts,who,text,hi,pd){S.tl.push({ts,who,text,hi:!!hi,pd:!!pd});}
 function seedA(){ev(at(0),"Broker mailbox","Submission received from Keystone Risk Partners: email and 4 documents.");audit(at(0),"Broker mailbox","Submission received (email + 4 attachments)","Logged");}
 function seedB(){
   gw(at(4),"Orchestrator","mailbox.read","intake:read","ALLOW");gw(at(6),"Orchestrator","doc.classify","docs:read","ALLOW");
@@ -480,13 +473,14 @@ function seedD1(){
   gw(at(54),"Risk agent","crm.update_account","crm:write","DENY","out of scope · Risk agent is read-only");
   gw(at(57),"Risk agent","lossrun.summarize","docs:read","ALLOW");
 }
-function seedD2(){ev(at(62),"Risk agent","Flagged missing evidence (guideline 3.1) and three other items, including an ammonia referral.");audit(at(62),"Risk agent","4 flags raised (1 high); referral required (guideline 4.2)","Done");}
+function seedD2(){ev(at(62),"Risk agent","Flagged missing evidence (guideline 3.1) and three other items, including an ammonia referral.");audit(at(62),"Risk agent","4 flags raised (1 high); referral required (guideline 4.2)","Done");
+  ev(at(63),"Risk agent","Opened an underwriter referral for ammonia refrigeration (guideline 4.2). Pending underwriter review.",false,true);audit(at(63),"Risk agent","Referral opened: ammonia refrigeration (guideline 4.2) · assigned to underwriter","PENDING underwriter review");}
 function seedE1(){
   gw(at(70),"Quote agent","rating.calculate","rating:sandbox","ALLOW");gw(at(73),"Quote agent","quote.save_draft","quote:draft","ALLOW");
   gw(at(75),"Quote agent","policy_admin.bind","policy:write","DENY","requires human approval");
   gw(at(77),"Quote agent","email.send_to_broker","mail:send · quote","DENY","requires human approval");
 }
-function seedE2(){ev(at(78),"Quote agent","Prepared draft terms ($114,650 indication). Its attempts to bind and to send the quote were blocked.");audit(at(78),"Quote agent","Draft terms saved (illustrative $114,650)","DRAFT · not sent");}
+function seedE2(){ev(at(78),"Quote agent","Prepared draft terms ($114,650 indication). Its attempts to bind and to send the quote were blocked.");audit(at(78),"Quote agent","Draft terms saved (illustrative $114,650)","DRAFT · preliminary · not sent");}
 function seedF(){
   gw(at(80),"Tool gateway","email.send_to_broker","mail:send · info request","HOLD","waiting for underwriter");
   ev(at(80),"Tool gateway","Broker request paused for underwriter approval.",true);
@@ -494,9 +488,9 @@ function seedF(){
 
 /* -------- render: side panel -------- */
 function snipHTML(keys){return keys.map(k=>`<div class="ev"><div class="src">${esc(SNIP[k].src)}</div><blockquote>${SNIP[k].q}</blockquote></div>`).join("");}
-function setAgentTab(p){$$(".ag").forEach(b=>b.classList.toggle("on",b.dataset.p===p));}
+function setAgTab(p){$$(".ag").forEach(b=>b.classList.toggle("on",b.dataset.p===p));}
 function showPanel(p){
-  if(p!=="evidence"){S.panel=p;setAgentTab(p);}
+  if(p!=="evidence"){S.panel=p;setAgTab(p);}
   const side=$("#side");let h="";
   if(p==="submission"){
     h=`<div class="side-h"><h4>Extracted application details</h4><span class="sub">Submission agent · click a source to check it</span></div><div class="side-b"><div class="rows">${DETAILS.map((d,i)=>`<div class="row${d[4]?" att":""}"><span class="k">${esc(d[0])}</span><span class="v">${esc(d[1])}<small><button class="src" data-d="${i}">${esc(d[2])}</button></small></span></div>`).join("")}</div></div>`;
@@ -504,9 +498,9 @@ function showPanel(p){
     h=`<div class="side-h"><h4>Flags</h4><span class="sub">Risk agent · each linked to its evidence</span></div><div class="side-b">${FLAGS.map((f,i)=>`<div class="fl${f[4]?" att":""}"><span class="sev ${f[0]}">${f[0]}</span><span class="t">${esc(f[1])}<small>${esc(f[2])}</small></span><button class="link" style="font-size:12.5px" data-f="${i}">Evidence</button></div>`).join("")}
       <p class="passed">Passed: appetite (with referral), clearance and duplicate check, sanctions screen, fictional third-party property data.</p></div>`;
   }else if(p==="quote"){
-    h=`<div class="side-h"><h4>Draft terms <span class="draftmark">DRAFT</span></h4><span class="sub">Quote agent · not quoted, not bound</span></div><div class="side-b">
-      <div class="qsum">Indication <b>$114,650</b> <span style="color:var(--muted);font-size:.93rem">(illustrative, excl. taxes and fees)</span></div>
-      <div class="qnote">Bind and send were blocked by the tool gateway. Coverage is unbound.</div>
+    h=`<div class="side-h"><h4>Draft terms <span class="draftmark">DRAFT</span></h4><span class="sub">Quote agent · preliminary · not quoted, not bound</span></div><div class="side-b">
+      <div class="qsum">Preliminary indication <b>$114,650</b> <span style="color:var(--muted);font-size:.93rem">(illustrative, excl. taxes and fees)</span></div>
+      <div class="qnote">Preliminary, subject to the sprinkler inspection report and the ammonia referral (guideline 4.2). Bind and send were blocked by the tool gateway. Coverage is unbound.</div>
       <button class="link" id="qToggle" aria-expanded="${S.quoteOpen}">${S.quoteOpen?"Hide draft quote":"View draft quote"}</button>
       ${S.quoteOpen?`<div class="qgrid"><div><h5>Premium</h5><div class="qr"><span>Commercial property</span><span>$96,400</span></div><div class="qr"><span>General liability</span><span>$18,250</span></div><div class="qr"><span><b>Total indication</b></span><span>$114,650</span></div>
         <h5>Deductibles</h5><div class="qr"><span>All other perils</span><span>$25,000</span></div><div class="qr"><span>Water damage <span class="r">G-5.3</span></span><span>$50,000</span></div><div class="qr"><span>Equipment breakdown</span><span>$25,000</span></div></div>
@@ -519,7 +513,7 @@ function showPanel(p){
   const qt=$("#qToggle");if(qt)qt.onclick=()=>{S.quoteOpen=!S.quoteOpen;showPanel("quote");};
 }
 function openEvidence(keys,title){
-  const side=$("#side");const back=S.panel;setAgentTab(null);
+  const side=$("#side");const back=S.panel;setAgTab(null);
   side.innerHTML=`<div class="side-h"><h4>Evidence</h4><span class="sub">${esc(title)}</span><button class="link back" id="evBack">Back to ${back==="submission"?"details":back==="risk"?"flags":"draft terms"}</button></div><div class="side-b" id="evBody">${snipHTML(keys)}<p class="note" style="font-size:12.5px;color:var(--muted);margin:0">Highlighted text is what the agent relied on. Fictional sample documents.</p></div>`;
   $("#evBack").onclick=()=>showPanel(back);
 }
@@ -528,16 +522,16 @@ function openEvidence(keys,title){
 function renderDecision(){
   const a=S.approved;
   const st=S.stage,dn=st==="done";
-  $("#status").textContent=a?"Request sent · Awaiting broker response":dn?"Awaiting review":st==="run"?"Agents reviewing":"New submission";$("#status").classList.toggle("is-sent",a);
-  $("#caseSt").textContent=a?"Awaiting broker":dn?"Awaiting review":st==="run"?"Agents reviewing":"New submission";
+  $("#status").textContent=a?"Request sent · 1 referral pending":dn?"Awaiting review · 2 open items":st==="run"?"Agents reviewing":"New submission";$("#status").classList.toggle("is-sent",a);
+  $("#caseSt").textContent=a?"1 referral pending":dn?"Awaiting review · 2 items":st==="run"?"Agents reviewing":"New submission";
   $("#focus").classList.toggle("done",a);$("#flag").textContent=a?"Request sent":"Needs your review";
   $("#acts").style.display=a?"none":"flex";$("#sent").classList.toggle("on",a);
   $("#reqText").readOnly=a;
   if(a)$("#sentBy").textContent=`Approved by ${UW} · ${fmt(S.approvedAt)} ET (simulated clock)`;
-  $("#kHum").textContent=(a||!dn)?"0":"1";$("#kHumU").textContent=(a||!dn)?"items":"item";$("#kHumS").textContent=a?"None on this case":dn?"Broker request":"Agents have not finished yet";
+  $("#kHum").textContent=!dn?"0":a?"1":"2";$("#kHumU").textContent=!dn?"items":a?"referral pending":"items";$("#kHumS").textContent=a?"Ammonia referral · underwriter review":dn?"Broker request · ammonia referral":"Agents have not finished yet";
   if(a){const d=Math.round((S.approvedAt-T0)/1000);$("#kResp").innerHTML=`<b>Sent ${fmt(S.approvedAt).slice(0,5)}</b> ET`;$("#kRespS").textContent=`${Math.floor(d/60)}m ${pad(d%60)}s after receipt · simulated`;}
   else{$("#kResp").textContent=dn?"Waiting on approval":"Not started";$("#kRespS").textContent="Simulated clock";}
-  if(dn)setRunStatus(a?"Request sent · awaiting broker response":"Agents finished · one item needs your review","done");
+  if(dn)setRunStatus(a?"Request sent · 1 referral pending":"Agents finished · 2 items need underwriter review","done");
   renderDrawer();
 }
 function renderDrawer(){
@@ -548,20 +542,22 @@ function renderDrawer(){
     $("#lead").innerHTML=S.stage==="idle"?`<div class="k">Latest · ${fmt(at(0))} ET</div><div class="e">Submission received.</div><div class="d">Waiting for the workflow to start. No agent has acted yet.</div>`
      :`<div class="k">Latest · ${fmt(last.ts)} ET</div><div class="e">${esc(last.text)}</div><div class="d">The agents are working. Every tool call goes through the tool gateway.</div>`;
   }else
-  $("#lead").className="lead "+(a?"ok":"held"),
-  $("#lead").innerHTML=a?`<div class="k">Latest · ${fmt(S.approvedAt)} ET</div><div class="e">J. Alvarez approved and sent the broker request.</div><div class="d">The tool gateway allowed one action with the underwriter's approval. Nothing else changed: the quote is still a draft and coverage is unbound.</div>`
-   :`<div class="k">Latest · ${fmt(at(80))} ET</div><div class="e">Broker request paused for underwriter approval.</div><div class="d">The Submission agent drafted it. The tool gateway holds outbound email until an underwriter approves.</div>`;
+  $("#lead").className="lead held",
+  $("#lead").innerHTML=a?`<div class="k">Latest · ${fmt(S.approvedAt)} ET</div><div class="e">J. Alvarez approved and sent the broker request.</div><div class="d">The tool gateway allowed one action with the underwriter's approval. 1 referral pending: ammonia refrigeration still requires underwriter review. The quote is still a draft and coverage is unbound.</div>`
+   :`<div class="k">Latest · ${fmt(at(80))} ET</div><div class="e">Broker request paused for underwriter approval.</div><div class="d">The Submission agent drafted it. The tool gateway holds outbound email until an underwriter approves. 2 items outstanding: this request and the ammonia referral.</div>`;
   const rows=[
     a?["email.send_to_broker","ALLOW",`Authorized: sprinkler report request to Maya Chen · approved by ${UW} at ${fmt(S.approvedAt)} ET`]:["email.send_to_broker","HOLD","Sprinkler report request · waiting for underwriter approval"],
     ["quote.send_to_broker","DENY","Quote is a draft · sending terms needs a separate underwriter decision"],
     ["policy_admin.bind","DENY",`Coverage unbound · binding needs separate human approval${a?" (not covered by this approval)":""}`],
     ["crm.update_account","DENY","Risk agent is read-only · least privilege"]
   ];
+  $("#openBlk").style.display=dn?"":"none";
+  $("#openList").innerHTML=[["email.send_to_broker",a?"ALLOW":"HOLD",a?"APPROVED":"PENDING",a?`Broker request approved by ${UW} and sent`:"Broker request · waiting for underwriter approval"],["referral · guideline 4.2","HOLD","PENDING","Ammonia refrigeration · requires underwriter review"+(a?" · not cleared by the broker-request approval":"")]].map(r=>`<div class="ar"><code>${r[0]}</code><span class="dec ${r[1]}">${r[2]}</span><span class="w">${esc(r[3])}</span></div>`).join("");
   const nd=S.done||0,shown=dn?rows:rows.filter((r,i)=>i===3?nd>=2:i===0?false:nd>=3);
   $("#actList").innerHTML=!shown.length?`<div class="ar"><span class="w" style="grid-column:1/3">${S.stage==="idle"?"No actions yet. The agents have not started.":"Actions appear here as the agents finish."}</span></div>`:shown.map(r=>`<div class="ar"><code>${r[0]}</code><span class="dec ${r[1]}">${r[1]==="ALLOW"?"ALLOWED":r[1]==="DENY"?"DENIED":"PAUSED"}</span><span class="w">${esc(r[2])}</span></div>`).join("");
-  $("#tl").innerHTML=S.tl.slice().reverse().map(e=>`<li class="${e.hi&&a&&e.who.indexOf("Alvarez")>=0?"hi":""}"><span class="tm">${fmt(e.ts)}</span><span>${esc(e.text)}<br><span class="who">${esc(e.who)}</span></span></li>`).join("");
+  $("#tl").innerHTML=S.tl.slice().reverse().map(e=>`<li class="${e.hi&&a&&e.who.indexOf("Alvarez")>=0?"hi":e.pd?"pd":""}"><span class="tm">${fmt(e.ts)}</span><span>${esc(e.text)}<br><span class="who">${esc(e.who)}</span></span></li>`).join("");
   $("#raw").innerHTML=S.gw.slice().reverse().map(g=>`<tr><td class="mono">${fmt(g.ts)}</td><td>${esc(g.agent.replace(" agent",""))}</td><td><code>${esc(g.tool)}</code><br><span style="color:var(--muted)">${esc(g.scope)}${g.why?" · "+esc(g.why):""}${g.by?" · approved by "+esc(g.by):""}</span></td><td><span class="dec ${g.dec}">${g.dec==="HOLD"?"PAUSED":g.dec}</span></td></tr>`).join("");
-  $("#au").innerHTML=S.audit.map(e=>`<tr><td class="mono">${e.seq}</td><td class="mono">${e.time}</td><td>${esc(e.actor)}</td><td>${esc(e.action)}<br><b style="color:${/DENIED/.test(e.decision)?"var(--red)":/APPROVED|approved/.test(e.decision)?"var(--green)":"var(--ink)"}">${esc(e.decision)}</b></td><td class="mono" title="prev ${e.prev_hash}">${e.hash.slice(0,8)}…</td></tr>`).join("");
+  $("#au").innerHTML=S.audit.map(e=>`<tr><td class="mono">${e.seq}</td><td class="mono">${e.time}</td><td>${esc(e.actor)}</td><td>${esc(e.action)}<br><b style="color:${/DENIED/.test(e.decision)?"var(--red)":/APPROVED|approved/.test(e.decision)?"var(--green)":/PENDING/.test(e.decision)?"#7A5200":"var(--ink)"}">${esc(e.decision)}</b></td><td class="mono" title="prev ${e.prev_hash}">${e.hash.slice(0,8)}…</td></tr>`).join("");
   $("#auStat").textContent=`Append-only · hash-chained (simulated) · ${S.audit.length} entries`;
 }
 
@@ -577,12 +573,17 @@ function approve(){
   ev(now,UW,"Approved the broker request.",true);
   ev(now+1000,"Tool gateway","Authorized action: request sent to Maya Chen, Keystone Risk Partners. Awaiting broker response.",true);
   audit(now+2000,"Tool gateway","Scope check after approval: quote send and policy_admin.bind not authorized","Quote remains DRAFT · coverage unbound");
-  S.approvedAt=now;renderDecision();toast("Request sent · approval recorded");
+  ev(now+2000,"Underwriter referral","Ammonia referral (guideline 4.2) is still open. It was not part of this approval. Pending underwriter review.",false,true);
+  audit(now+2000,"Underwriter referral","Ammonia referral (guideline 4.2): not decided by the broker-request approval","PENDING underwriter review");
+  S.approvedAt=now;renderDecision();toast("Request sent · 1 referral pending");
 }
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2400);}
 function exportJSON(){
-  const data={title:"Underwriter Workbench activity record",disclaimer:"Illustrative prototype. Fictional data. Not an NTT DATA product.",submission_id:SUB_ID,insured:"Ridgeway Cold Storage LLC (fictional)",clock:"simulated, America/New_York (UTC-05:00)",
-    status:S.approved?"Request sent · Awaiting broker response":"Awaiting review",quote:"DRAFT",coverage:"UNBOUND",
+  const data={title:"Underwriter Workbench activity record",disclaimer:"Independent concept prototype · Fictional data · Not affiliated with or endorsed by NTT DATA.",submission_id:SUB_ID,insured:"Ridgeway Cold Storage LLC (fictional)",clock:"simulated, America/New_York (UTC-05:00)",
+    status:S.stage!=="done"?(S.stage==="run"?"Agents reviewing":"New submission"):S.approved?"Request sent · 1 referral pending":"Awaiting review · 2 open items",quote:"DRAFT · preliminary · subject to sprinkler inspection report and ammonia referral",coverage:"UNBOUND",
+    outstanding_items:(()=>{const dn=S.stage==="done",o=[];if(dn)o.push({item:"Broker information request (sprinkler inspection report)",status:S.approved?"APPROVED and sent by "+UW:"PENDING underwriter approval"});if(dn||S.done>=2)o.push({item:"Underwriter referral: ammonia refrigeration (guideline 4.2)",status:"PENDING underwriter review",cleared_by_broker_request_approval:false});return o;})(),
+    referral:{ammonia_refrigeration_g4_2:(S.stage==="done"||S.done>=2)?"PENDING underwriter review":"Not yet raised"},
+    outstanding_count:S.stage==="done"?(S.approved?1:2):0,
     approval:S.approved?{action:"email.send_to_broker (sprinkler inspection report request)",approved_by:UW,approved_at:iso(S.approvedAt)}:null,
     audit_trail:S.audit,gateway_calls:S.gw.map(g=>({timestamp:iso(g.ts),agent:g.agent,tool:g.tool,scope:g.scope,decision:g.dec,note:g.why||null,approved_by:g.by||null}))};
   const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=`activity_record_${SUB_ID}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast("Activity record exported as JSON");
@@ -622,7 +623,7 @@ function renderStage(){
   h.title=RAN?"Reset to the opening decision (replays a short agent run)":"Run the agents on this new submission";
   $("#side").classList.toggle("busy",run);
   if(st==="idle"){
-    $$(".ag").forEach((_,i)=>setAgent(i,"wait"));setAgentTab(null);
+    $$(".ag").forEach((_,i)=>setAgent(i,"wait"));setAgTab(null);
     $("#side").innerHTML=`<div class="side-h"><h4>Agent output</h4><span class="sub">Waiting for the workflow to start</span></div>`;
     setRunStatus("Ready · waiting for you to start the workflow","idle");
   }
@@ -636,7 +637,7 @@ async function run(){
   if(S.stage==="run")return;
   const tok=S.token;S.stage="run";S.busy=true;S.done=0;
   const w=async ms=>{await sleep(ms);return tok===S.token;};
-  $$(".ag").forEach((_,i)=>setAgent(i,"wait"));setAgentTab(null);
+  $$(".ag").forEach((_,i)=>setAgent(i,"wait"));setAgTab(null);
   $("#side").innerHTML=`<div class="side-h"><h4>Agent output</h4><span class="sub">Starting…</span></div>`;
   renderStage();seedB();renderDrawer();
   for(let i=0;i<3;i++){
@@ -667,7 +668,7 @@ async function run(){
   S.busy=false;S.stage="done";RAN=true;S.loadedAt=performance.now();
   showPanel("submission");renderStage();$("#side").classList.remove("busy");
   const focus=$("#focus");focus.animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],{duration:350});
-  requestAnimationFrame(fitReq);toast("Agents finished · one item needs your review");
+  requestAnimationFrame(fitReq);toast("Agents finished · 2 items need underwriter review");
 }
 function replay(){reset();run();}
 
